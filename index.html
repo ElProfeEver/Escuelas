@@ -43,98 +43,76 @@
             background-color: var(--color-guinda-dark);
             box-shadow: 0 4px 12px rgba(128, 0, 32, 0.3);
         }
+
+        input[type="text"], textarea {
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen text-gray-900">
 
-    <!-- PANTALLA DE LOGIN -->
+    <!-- LOGIN -->
     <div id="view-login" class="fixed inset-0 z-[1000] login-gradient flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl p-8 space-y-8">
             <div class="text-center">
-                <div class="inline-flex p-2 bg-gray-50 rounded-2xl mb-4 border border-gray-100">
-                    <!-- Imagen del Logo Proporcionada -->
-                    <img src="image_8739e6.png" alt="Logo CBTis 291" class="h-24 w-auto object-contain" onerror="this.src='https://via.placeholder.com/150?text=CBTis+291'">
+                <div class="inline-flex p-4 bg-gray-50 rounded-full mb-4 border border-gray-100 shadow-inner">
+                    <img src="image_8739e6.png" alt="Logo CBTis 291" class="h-28 w-auto object-contain" onerror="this.src='https://via.placeholder.com/150?text=CBTis+291'">
                 </div>
-                <h1 class="text-3xl font-black text-gray-800 text-center uppercase tracking-tight">EduControl</h1>
-                <p class="text-gray-400 font-medium text-center">CBTis 291 - Gestión Escolar</p>
+                <h1 class="text-3xl font-black text-gray-800 uppercase tracking-tighter">EduControl</h1>
+                <p class="text-gray-400 font-medium uppercase text-xs tracking-widest">CBTis 291 - Gestión Administrativa</p>
             </div>
             <div class="space-y-4">
-                <div>
-                    <label class="text-[10px] font-black text-gray-400 uppercase ml-1">Usuario</label>
-                    <input type="text" id="login-user" class="w-full bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 outline-none focus-border-guinda transition font-bold" placeholder="admin">
-                </div>
-                <div>
-                    <label class="text-[10px] font-black text-gray-400 uppercase ml-1">Contraseña</label>
-                    <input type="password" id="login-pass" class="w-full bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 outline-none focus-border-guinda transition font-bold" placeholder="••••••••">
-                </div>
-                <button onclick="attemptLogin()" class="w-full btn-guinda py-4 rounded-2xl font-black shadow-lg">
-                    Acceder al Sistema
-                </button>
+                <input type="text" id="login-user" class="w-full bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 outline-none focus-border-guinda font-bold" placeholder="USUARIO">
+                <input type="password" id="login-pass" class="w-full bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 outline-none focus-border-guinda font-bold text-gray-800" placeholder="••••••••">
+                <button onclick="attemptLogin()" class="w-full btn-guinda py-4 rounded-2xl font-black shadow-lg uppercase tracking-wider">Entrar al Sistema</button>
             </div>
-            <p id="login-error" class="text-center text-red-600 font-bold text-xs hidden italic">Credenciales incorrectas o usuario inexistente</p>
+            <p id="login-error" class="text-center text-red-600 font-bold text-xs hidden italic uppercase">Credenciales Inválidas</p>
         </div>
     </div>
 
-    <!-- MODAL DE IMPORTACIÓN MASIVA -->
-    <div id="modal-import" class="fixed inset-0 z-[1100] bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl p-8 space-y-6">
-            <div>
-                <h3 class="text-2xl font-black text-gray-800">Importar Alumnos</h3>
-                <p class="text-sm text-gray-500 font-medium">Pega los nombres de los alumnos (uno por línea).</p>
-            </div>
-            <textarea id="import-area" class="w-full h-64 bg-gray-50 border-2 border-gray-100 rounded-2xl p-4 outline-none focus-border-guinda font-mono text-sm custom-scroll" placeholder="Ejemplo:&#10;JUAN PEREZ..."></textarea>
-            <div class="flex gap-3">
-                <button onclick="closeImportModal()" class="flex-1 py-3 rounded-xl font-black text-gray-500 hover:bg-gray-100 transition">Cancelar</button>
-                <button onclick="processImport()" class="flex-[2] btn-guinda py-3 rounded-xl font-black shadow-lg">Cargar Lista</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- CONTENIDO PRINCIPAL -->
+    <!-- MAIN APP -->
     <div id="main-content" class="hidden">
-        <nav class="bg-guinda text-white shadow-2xl sticky top-0 z-50">
-            <div class="container mx-auto px-4 py-2 flex justify-between items-center">
+        <nav class="bg-guinda text-white shadow-xl sticky top-0 z-50">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
                 <div class="flex items-center gap-3">
-                    <img src="image_8739e6.png" alt="Logo" class="h-10 w-auto brightness-0 invert">
-                    <h1 class="text-lg font-extrabold hidden sm:block tracking-tighter uppercase">CBTis 291</h1>
+                    <img src="image_8739e6.png" alt="Logo" class="h-12 w-auto brightness-0 invert">
+                    <div class="leading-none">
+                        <h1 class="text-xl font-black tracking-tighter uppercase">CBTis 291</h1>
+                        <span class="text-[9px] font-bold opacity-75 uppercase">Control Escolar</span>
+                    </div>
                 </div>
                 <div class="flex gap-1 sm:gap-2">
-                    <button onclick="showView('attendance')" class="nav-btn px-3 py-2 rounded-lg hover:bg-guinda-dark text-[11px] sm:text-sm font-bold flex items-center gap-1">
-                        <i class="fas fa-list-check"></i> <span class="hidden xs:inline">Asistencia</span>
+                    <button onclick="showView('attendance')" class="px-3 py-2 rounded-lg hover:bg-guinda-dark text-sm font-bold flex items-center gap-2">
+                        <i class="fas fa-check-square"></i> <span class="hidden md:inline uppercase">Pase de Lista</span>
                     </button>
-                    <button id="nav-admin" onclick="showView('admin')" class="nav-btn px-3 py-2 rounded-lg hover:bg-guinda-dark text-[11px] sm:text-sm font-bold flex items-center gap-1">
-                        <i class="fas fa-tools"></i> <span class="hidden xs:inline">Administrar</span>
+                    <button id="nav-admin" onclick="showView('admin')" class="px-3 py-2 rounded-lg hover:bg-guinda-dark text-sm font-bold flex items-center gap-2">
+                        <i class="fas fa-chart-line"></i> <span class="hidden md:inline uppercase">Panel Maestro</span>
                     </button>
-                    <button onclick="showView('history')" class="nav-btn px-3 py-2 rounded-lg hover:bg-guinda-dark text-[11px] sm:text-sm font-bold flex items-center gap-1">
-                        <i class="fas fa-history"></i> <span class="hidden xs:inline">Historial</span>
+                    <button onclick="showView('history')" class="px-3 py-2 rounded-lg hover:bg-guinda-dark text-sm font-bold flex items-center gap-2">
+                        <i class="fas fa-file-invoice"></i> <span class="hidden md:inline uppercase">Historial</span>
                     </button>
-                    <button onclick="logout()" class="px-3 py-2 rounded-lg bg-black/20 hover:bg-black/40 text-[11px] sm:text-sm font-bold ml-2">
-                        <i class="fas fa-power-off"></i>
-                    </button>
+                    <button onclick="logout()" class="px-3 py-2 rounded-lg bg-black/20 hover:bg-black/40"><i class="fas fa-power-off"></i></button>
                 </div>
             </div>
         </nav>
 
-        <main class="container mx-auto px-4 py-6 max-w-6xl">
+        <main class="container mx-auto px-4 py-8 max-w-7xl">
+            
             <!-- VISTA: ASISTENCIA -->
             <div id="view-attendance" class="view space-y-6">
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 space-y-4">
-                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                        <div>
-                            <h2 class="text-2xl font-black text-gray-800">Control de Asistencia</h2>
-                            <p id="display-date" class="text-guinda font-bold text-sm uppercase"></p>
-                        </div>
-                        <div class="flex flex-wrap gap-2 items-center w-full md:w-auto">
-                            <select id="select-attendance-group" onchange="resetTempAttendance(); renderAttendanceList();" class="flex-1 md:flex-none bg-gray-50 border-2 p-3 rounded-xl font-bold outline-none focus-border-guinda min-w-[200px]"></select>
-                            <button onclick="saveAttendance()" class="bg-green-600 text-white px-6 py-3 rounded-xl font-black shadow-lg hover:bg-green-700 transition flex items-center gap-2">
-                                <i class="fas fa-save"></i> Finalizar
-                            </button>
-                        </div>
+                <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div>
+                        <h2 class="text-2xl font-black text-gray-800 uppercase tracking-tight">Registro de Asistencia</h2>
+                        <p id="display-date" class="text-guinda font-bold text-xs uppercase tracking-widest"></p>
+                    </div>
+                    <div class="flex gap-3 w-full md:w-auto">
+                        <select id="select-attendance-group" onchange="resetTempAttendance(); renderAttendanceList();" class="flex-1 bg-gray-50 border-2 border-gray-100 p-3 rounded-xl font-bold uppercase text-sm"></select>
+                        <button onclick="saveAttendance()" class="bg-green-600 text-white px-8 py-3 rounded-xl font-black shadow-lg hover:bg-green-700 uppercase text-sm">Guardar Lista</button>
                     </div>
                 </div>
-                <div id="attendance-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-                <div id="no-students-msg" class="hidden text-center py-20 bg-white rounded-3xl border-2 border-dashed border-gray-200">
-                    <p class="text-gray-400 font-bold">No hay alumnos registrados en este grupo.</p>
+                <div id="attendance-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+                <div id="no-students-msg" class="hidden text-center py-24 bg-white rounded-3xl border-2 border-dashed border-gray-200">
+                    <p class="text-gray-400 font-bold uppercase italic">No hay alumnos en el grupo seleccionado</p>
                 </div>
             </div>
 
@@ -142,146 +120,168 @@
             <div id="view-admin" class="view hidden space-y-8">
                 <div class="flex flex-col md:flex-row justify-between items-end gap-4">
                     <div>
-                        <h2 class="text-3xl font-black text-gray-800">Panel Maestro</h2>
-                        <p class="text-gray-500 font-medium">Configura la estructura del CBTis 291.</p>
+                        <h2 class="text-3xl font-black text-gray-800 uppercase">Panel de Control</h2>
+                        <p class="text-gray-500 font-medium uppercase text-xs">Administración y Estadísticas del Plantel</p>
                     </div>
                     <div class="flex gap-2">
-                        <button onclick="exportBackup()" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-xl font-black text-xs uppercase hover:bg-gray-200 transition">
-                            <i class="fas fa-download mr-1"></i> Respaldo
-                        </button>
-                        <label class="bg-amber-50 text-amber-900 px-4 py-2 rounded-xl font-black text-xs uppercase hover:bg-amber-100 transition cursor-pointer border border-amber-200">
-                            <i class="fas fa-upload mr-1"></i> Restaurar
-                            <input type="file" id="import-file" class="hidden" accept=".json" onchange="importBackup(event)">
+                        <button onclick="exportBackup()" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-xl font-black text-[10px] uppercase hover:bg-gray-200">Exportar</button>
+                        <label class="bg-amber-50 text-amber-900 px-4 py-2 rounded-xl font-black text-[10px] uppercase cursor-pointer border border-amber-200">
+                            Importar <input type="file" id="import-file" class="hidden" accept=".json" onchange="importBackup(event)">
                         </label>
                     </div>
                 </div>
 
                 <!-- TABS -->
-                <div class="flex flex-wrap gap-2 border-b border-gray-200 pb-1">
-                    <button onclick="showAdminTab('catalogos')" class="admin-tab-btn px-4 py-2 font-black text-sm uppercase tracking-wider text-guinda border-b-4 border-guinda">Catálogos</button>
-                    <button onclick="showAdminTab('grupos')" class="admin-tab-btn px-4 py-2 font-black text-sm uppercase tracking-wider text-gray-400 border-b-4 border-transparent">Grupos y Alumnos</button>
-                    <button onclick="showAdminTab('usuarios')" class="admin-tab-btn px-4 py-2 font-black text-sm uppercase tracking-wider text-gray-400 border-b-4 border-transparent">Usuarios</button>
+                <div class="flex flex-wrap gap-2 border-b border-gray-200">
+                    <button onclick="showAdminTab('stats')" class="admin-tab-btn px-6 py-3 font-black text-xs uppercase tracking-tighter text-guinda border-b-4 border-guinda">Estadísticas</button>
+                    <button onclick="showAdminTab('catalogos')" class="admin-tab-btn px-6 py-3 font-black text-xs uppercase tracking-tighter text-gray-400 border-b-4 border-transparent">Catálogos</button>
+                    <button onclick="showAdminTab('grupos')" class="admin-tab-btn px-6 py-3 font-black text-xs uppercase tracking-tighter text-gray-400 border-b-4 border-transparent">Grupos y Alumnos</button>
+                    <button onclick="showAdminTab('usuarios')" class="admin-tab-btn px-6 py-3 font-black text-xs uppercase tracking-tighter text-gray-400 border-b-4 border-transparent">Usuarios</button>
                 </div>
 
-                <!-- TAB: CATÁLOGOS -->
-                <div id="admin-tab-catalogos" class="admin-tab space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-                            <h3 class="text-lg font-black mb-4 flex items-center gap-2"><i class="fas fa-layer-group text-guinda"></i> Grados</h3>
-                            <div class="flex gap-2 mb-4">
-                                <input type="text" id="cat-grade-input" placeholder="Ej. 1ro" class="flex-1 bg-gray-50 border p-2 rounded-xl text-sm font-bold outline-none">
-                                <button onclick="addToCatalog('grades', 'cat-grade-input')" class="btn-guinda px-4 rounded-xl transition"><i class="fas fa-plus"></i></button>
-                            </div>
-                            <div id="list-grades" class="space-y-1 max-h-48 overflow-y-auto custom-scroll"></div>
+                <!-- TAB: ESTADÍSTICAS -->
+                <div id="admin-tab-stats" class="admin-tab space-y-6">
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="font-black text-xl uppercase tracking-tighter">Reporte de Incidencias</h3>
+                            <select id="stats-group-filter" onchange="renderStats()" class="bg-gray-50 border p-2 rounded-xl font-bold uppercase text-xs">
+                                <option value="TODOS">TODOS LOS GRUPOS</option>
+                            </select>
                         </div>
-                        <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-                            <h3 class="text-lg font-black mb-4 flex items-center gap-2"><i class="fas fa-user-tie text-guinda"></i> Maestros</h3>
-                            <div class="flex gap-2 mb-4">
-                                <input type="text" id="cat-teacher-input" placeholder="Nombre Maestro" class="flex-1 bg-gray-50 border p-2 rounded-xl text-sm font-bold outline-none uppercase">
-                                <button onclick="addToCatalog('teachers', 'cat-teacher-input')" class="btn-guinda px-4 rounded-xl transition"><i class="fas fa-plus"></i></button>
-                            </div>
-                            <div id="list-teachers" class="space-y-1 max-h-48 overflow-y-auto custom-scroll"></div>
+                        <div id="stats-container" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <!-- Cards de stats -->
                         </div>
-                        <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-                            <h3 class="text-lg font-black mb-4 flex items-center gap-2"><i class="fas fa-book text-guinda"></i> Materias</h3>
-                            <div class="flex gap-2 mb-4">
-                                <input type="text" id="cat-subject-input" placeholder="Ej. Matemáticas" class="flex-1 bg-gray-50 border p-2 rounded-xl text-sm font-bold outline-none uppercase">
-                                <button onclick="addToCatalog('subjects', 'cat-subject-input')" class="btn-guinda px-4 rounded-xl transition"><i class="fas fa-plus"></i></button>
-                            </div>
-                            <div id="list-subjects" class="space-y-1 max-h-48 overflow-y-auto custom-scroll"></div>
+                        <div class="mt-8 overflow-hidden rounded-2xl border border-gray-100">
+                            <table class="w-full text-left text-sm">
+                                <thead class="bg-gray-50 uppercase text-[10px] font-black text-gray-500">
+                                    <tr>
+                                        <th class="p-4">Grupo</th>
+                                        <th class="p-4">Asistencias</th>
+                                        <th class="p-4">Faltas</th>
+                                        <th class="p-4">Retardos</th>
+                                        <th class="p-4">Justificados</th>
+                                        <th class="p-4">% Asistencia</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="stats-table-body" class="font-bold"></tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
 
-                <!-- TAB: GRUPOS -->
-                <div id="admin-tab-grupos" class="admin-tab hidden grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <section class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 h-fit">
-                        <h3 class="text-xl font-black text-guinda mb-4">Configurar Grupo</h3>
-                        <div class="space-y-3">
-                            <div>
-                                <label class="text-[10px] font-black text-gray-400 uppercase">Grado</label>
-                                <select id="adm-grade" class="w-full bg-gray-50 border p-3 rounded-xl font-bold outline-none"></select>
-                            </div>
-                            <div>
-                                <label class="text-[10px] font-black text-gray-400 uppercase">Grupo</label>
-                                <input type="text" id="adm-group" placeholder="Ej. A" class="w-full bg-gray-50 border p-3 rounded-xl font-bold uppercase outline-none">
-                            </div>
-                            <div>
-                                <label class="text-[10px] font-black text-gray-400 uppercase">Maestro Asignado</label>
-                                <select id="adm-teacher" class="w-full bg-gray-50 border p-3 rounded-xl font-bold outline-none"></select>
-                            </div>
-                            <div>
-                                <label class="text-[10px] font-black text-gray-400 uppercase">Materia</label>
-                                <select id="adm-subject" class="w-full bg-gray-50 border p-3 rounded-xl font-bold outline-none"></select>
-                            </div>
-                            <button onclick="saveClassroom()" class="w-full btn-guinda py-3 rounded-xl font-black shadow-md">Crear / Guardar Grupo</button>
+                <!-- TAB: CATÁLOGOS -->
+                <div id="admin-tab-catalogos" class="admin-tab hidden grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                        <h3 class="text-sm font-black mb-4 uppercase text-guinda tracking-widest">Grados</h3>
+                        <div class="flex gap-2 mb-4">
+                            <input type="text" id="cat-grade-input" placeholder="EJ. 1RO" class="flex-1 bg-gray-50 border p-2 rounded-xl text-xs font-bold outline-none uppercase">
+                            <button onclick="addToCatalog('grades', 'cat-grade-input')" class="btn-guinda px-4 rounded-xl"><i class="fas fa-plus"></i></button>
                         </div>
-                        <div class="mt-8">
-                            <h4 class="text-xs font-black text-gray-400 uppercase mb-3 tracking-widest border-b pb-2">Grupos del Plantel</h4>
-                            <div id="classroom-list" class="space-y-2 max-h-60 overflow-y-auto custom-scroll"></div>
+                        <div id="list-grades" class="space-y-1 max-h-48 overflow-y-auto custom-scroll"></div>
+                    </div>
+                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                        <h3 class="text-sm font-black mb-4 uppercase text-guinda tracking-widest">Maestros</h3>
+                        <div class="flex gap-2 mb-4">
+                            <input type="text" id="cat-teacher-input" placeholder="NOMBRE COMPLETO" class="flex-1 bg-gray-50 border p-2 rounded-xl text-xs font-bold outline-none uppercase">
+                            <button onclick="addToCatalog('teachers', 'cat-teacher-input')" class="btn-guinda px-4 rounded-xl"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <div id="list-teachers" class="space-y-1 max-h-48 overflow-y-auto custom-scroll"></div>
+                    </div>
+                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                        <h3 class="text-sm font-black mb-4 uppercase text-guinda tracking-widest">Materias</h3>
+                        <div class="flex gap-2 mb-4">
+                            <input type="text" id="cat-subject-input" placeholder="MATERIA" class="flex-1 bg-gray-50 border p-2 rounded-xl text-xs font-bold outline-none uppercase">
+                            <button onclick="addToCatalog('subjects', 'cat-subject-input')" class="btn-guinda px-4 rounded-xl"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <div id="list-subjects" class="space-y-1 max-h-48 overflow-y-auto custom-scroll"></div>
+                    </div>
+                </div>
+
+                <!-- TAB: GRUPOS -->
+                <div id="admin-tab-grupos" class="admin-tab hidden grid grid-cols-1 lg:grid-cols-4 gap-8">
+                    <section class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 h-fit space-y-4">
+                        <h3 class="text-lg font-black text-guinda uppercase">Nuevo Grupo</h3>
+                        <div class="space-y-3">
+                            <select id="adm-grade" class="w-full bg-gray-50 border p-3 rounded-xl font-bold uppercase text-xs"></select>
+                            <input type="text" id="adm-group" placeholder="GRUPO (EJ. A)" class="w-full bg-gray-50 border p-3 rounded-xl font-bold uppercase text-xs">
+                            <select id="adm-teacher" class="w-full bg-gray-50 border p-3 rounded-xl font-bold uppercase text-xs"></select>
+                            <select id="adm-subject" class="w-full bg-gray-50 border p-3 rounded-xl font-bold uppercase text-xs"></select>
+                            <button onclick="saveClassroom()" class="w-full btn-guinda py-3 rounded-xl font-black uppercase text-xs">Crear Grupo</button>
+                        </div>
+                        <div class="pt-4">
+                            <h4 class="text-[10px] font-black text-gray-400 uppercase mb-3 tracking-widest border-b pb-2">Grupos Activos</h4>
+                            <div id="classroom-list" class="space-y-2 max-h-64 overflow-y-auto custom-scroll"></div>
                         </div>
                     </section>
 
-                    <section id="panel-details" class="lg:col-span-2 hidden space-y-6">
-                        <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="text-xl font-black flex items-center gap-2"><i class="fas fa-users text-guinda"></i> Alumnos del Grupo</h3>
-                                <button onclick="openImportModal()" class="text-xs font-black text-guinda uppercase bg-red-50 px-3 py-1 rounded-lg hover:bg-red-100 transition">Importación Masiva</button>
+                    <section id="panel-details" class="lg:col-span-3 hidden space-y-6">
+                        <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="text-xl font-black uppercase tracking-tighter">Lista de Alumnos</h3>
+                                <button onclick="openImportModal()" class="text-[10px] font-black text-guinda uppercase bg-red-50 px-4 py-2 rounded-xl">Importación Masiva</button>
                             </div>
                             <div class="flex gap-2 mb-6">
-                                <input type="text" id="st-name" placeholder="Nombre completo" class="flex-1 bg-gray-50 border p-3 rounded-xl font-bold uppercase outline-none focus-border-guinda">
-                                <button onclick="addStudent()" class="btn-guinda px-6 rounded-xl shadow-sm"><i class="fas fa-plus"></i></button>
+                                <input type="text" id="st-name" placeholder="APELLIDOS Y NOMBRES" class="flex-1 bg-gray-50 border-2 border-gray-100 p-3 rounded-xl font-bold uppercase outline-none focus-border-guinda">
+                                <button onclick="addStudent()" class="btn-guinda px-8 rounded-xl"><i class="fas fa-plus"></i></button>
                             </div>
-                            <ul id="student-list" class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-80 overflow-y-auto custom-scroll p-1"></ul>
+                            <ul id="student-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-96 overflow-y-auto custom-scroll p-1"></ul>
                         </div>
                     </section>
                 </div>
 
                 <!-- TAB: USUARIOS -->
-                <div id="admin-tab-usuarios" class="admin-tab hidden space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 h-fit">
-                            <h3 class="text-xl font-black text-guinda mb-4">Crear Usuario</h3>
-                            <div class="space-y-3">
-                                <input type="text" id="user-name" placeholder="Usuario" class="w-full bg-gray-50 border p-3 rounded-xl font-bold outline-none">
-                                <input type="password" id="user-pass" placeholder="Contraseña" class="w-full bg-gray-50 border p-3 rounded-xl font-bold outline-none">
-                                <select id="user-role" class="w-full bg-gray-50 border p-3 rounded-xl font-bold outline-none">
-                                    <option value="admin">Administrador (Total)</option>
-                                    <option value="staff">Maestro/Prefecto (Sólo Lista)</option>
-                                </select>
-                                <button onclick="addUser()" class="w-full btn-guinda py-3 rounded-xl font-black shadow-md">Registrar Usuario</button>
-                            </div>
-                        </div>
-                        <div class="md:col-span-2 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-                            <h3 class="text-xl font-black mb-4">Cuentas Activas</h3>
-                            <div id="list-users" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
-                        </div>
+                <div id="admin-tab-usuarios" class="admin-tab hidden grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 h-fit space-y-4">
+                        <h3 class="text-lg font-black text-guinda uppercase">Alta de Usuario</h3>
+                        <input type="text" id="user-name" placeholder="USUARIO" class="w-full bg-gray-50 border p-3 rounded-xl font-bold uppercase text-xs">
+                        <input type="password" id="user-pass" placeholder="CONTRASEÑA" class="w-full bg-gray-50 border p-3 rounded-xl font-bold text-xs">
+                        <select id="user-role" class="w-full bg-gray-50 border p-3 rounded-xl font-bold text-xs uppercase">
+                            <option value="admin">Administrador</option>
+                            <option value="staff">Personal / Prefectura</option>
+                        </select>
+                        <button onclick="addUser()" class="w-full btn-guinda py-3 rounded-xl font-black uppercase text-xs">Guardar Usuario</button>
+                    </div>
+                    <div class="md:col-span-2 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                        <h3 class="text-xl font-black mb-4 uppercase">Usuarios Registrados</h3>
+                        <div id="list-users" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
                     </div>
                 </div>
             </div>
 
             <!-- VISTA: HISTORIAL -->
-            <div id="view-history" class="view hidden space-y-4">
-                <div class="flex justify-between items-center">
-                    <h2 class="text-2xl font-black">Historial de Registros</h2>
-                    <button onclick="clearHistory()" class="text-[10px] font-black text-red-600 uppercase underline">Limpiar Historial</button>
+            <div id="view-history" class="view hidden space-y-6">
+                <div class="flex justify-between items-center bg-white p-6 rounded-3xl shadow-sm">
+                    <h2 class="text-2xl font-black uppercase">Bitácora de Asistencias</h2>
+                    <button onclick="clearHistory()" class="text-[10px] font-black text-red-600 uppercase border border-red-200 px-4 py-2 rounded-xl hover:bg-red-50">Purgar Historial</button>
                 </div>
-                <div id="history-list" class="grid gap-3"></div>
+                <div id="history-list" class="grid gap-4"></div>
             </div>
         </main>
     </div>
 
-    <!-- TOAST -->
-    <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[2000] opacity-0 transition-all duration-300 bg-gray-900 text-white px-8 py-4 rounded-2xl font-bold shadow-2xl pointer-events-none text-center"></div>
+    <!-- MODAL IMPORT -->
+    <div id="modal-import" class="fixed inset-0 z-[1100] bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-xl rounded-3xl shadow-2xl p-8 space-y-6">
+            <h3 class="text-2xl font-black uppercase">Importar Alumnos</h3>
+            <p class="text-xs text-gray-500 font-bold uppercase">Pega la lista de alumnos, un nombre por renglón:</p>
+            <textarea id="import-area" class="w-full h-80 bg-gray-50 border-2 border-gray-100 rounded-2xl p-4 outline-none focus-border-guinda font-mono text-xs custom-scroll uppercase"></textarea>
+            <div class="flex gap-3">
+                <button onclick="closeImportModal()" class="flex-1 py-3 font-black text-gray-400 uppercase">Cancelar</button>
+                <button onclick="processImport()" class="flex-[2] btn-guinda py-3 rounded-2xl font-black uppercase">Cargar Alumnos</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[2000] opacity-0 transition-all duration-300 bg-gray-900 text-white px-8 py-4 rounded-2xl font-bold shadow-2xl pointer-events-none text-xs uppercase"></div>
 
     <script>
-        // --- BASE DE DATOS Y ESTADO ---
-        let db = JSON.parse(localStorage.getItem('edu_db_cbtis')) || {
+        // --- DATA ENGINE ---
+        let db = JSON.parse(localStorage.getItem('edu_db_cbtis_v2')) || {
             classrooms: [],
             history: [],
-            users: [{id: '1', user: 'admin', pass: '1234', role: 'admin'}],
+            users: [{id: '1', user: 'ADMIN', pass: '1234', role: 'admin'}],
             catalogs: {
-                grades: ["1ro", "2do", "3ro", "4to", "5to", "6to"],
+                grades: ["1RO", "2DO", "3RO", "4TO", "5TO", "6TO"],
                 teachers: [],
                 subjects: []
             }
@@ -293,10 +293,9 @@
 
         // --- AUTH ---
         window.attemptLogin = () => {
-            const u = document.getElementById('login-user').value;
+            const u = document.getElementById('login-user').value.toUpperCase();
             const p = document.getElementById('login-pass').value;
             const found = db.users.find(x => x.user === u && x.pass === p);
-            
             if (found) {
                 currentUser = found;
                 document.getElementById('view-login').classList.add('hidden');
@@ -310,11 +309,10 @@
             }
         };
 
-        window.logout = () => { location.reload(); };
+        window.logout = () => location.reload();
 
-        // --- NAVEGACIÓN ---
+        // --- NAVIGATION ---
         window.showView = (v) => {
-            if (v === 'admin' && currentUser.role !== 'admin') return;
             document.querySelectorAll('.view').forEach(e => e.classList.add('hidden'));
             document.getElementById(`view-${v}`).classList.remove('hidden');
             renderAll();
@@ -326,30 +324,30 @@
             document.querySelectorAll('.admin-tab-btn').forEach(b => {
                 b.classList.remove('text-guinda', 'border-guinda');
                 b.classList.add('text-gray-400', 'border-transparent');
-                if(b.innerText.toLowerCase().includes(tabId.slice(0,3))) {
+                if(b.innerText.toLowerCase().includes(tabId.slice(0,3)) || (tabId==='stats' && b.innerText.toLowerCase().includes('est'))) {
                     b.classList.add('text-guinda', 'border-guinda');
                     b.classList.remove('text-gray-400', 'border-transparent');
                 }
             });
+            if(tabId === 'stats') renderStats();
         };
 
         function initApp() {
             const hoy = new Date();
-            const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('display-date').innerText = hoy.toLocaleDateString('es-ES', opciones);
+            document.getElementById('display-date').innerText = hoy.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).toUpperCase();
             renderAll();
         }
 
-        // --- CATÁLOGOS ---
+        // --- LOGIC ---
         window.addToCatalog = (type, inputId) => {
             const input = document.getElementById(inputId);
-            const val = input.value.trim();
+            const val = input.value.trim().toUpperCase();
             if(!val) return;
             if(!db.catalogs[type].includes(val)) {
                 db.catalogs[type].push(val);
                 db.catalogs[type].sort();
                 saveData(); renderAll(); input.value = "";
-                showToast(`Agregado exitosamente`);
+                showToast(`Agregado`);
             }
         };
 
@@ -358,10 +356,9 @@
             saveData(); renderAll();
         };
 
-        // --- GRUPOS ---
         window.saveClassroom = () => {
             const grade = document.getElementById('adm-grade').value;
-            const group = document.getElementById('adm-group').value.trim();
+            const group = document.getElementById('adm-group').value.trim().toUpperCase();
             const teacher = document.getElementById('adm-teacher').value;
             const subject = document.getElementById('adm-subject').value;
 
@@ -370,21 +367,13 @@
             const newId = Date.now().toString();
             db.classrooms.push({
                 id: newId,
-                fullName: `${grade} ${group.toUpperCase()}`,
-                grade, group: group.toUpperCase(),
-                teacher, subject,
-                students: []
+                fullName: `${grade} ${group}`,
+                grade, group, teacher, subject,
+                students: [],
+                stats: { P: 0, F: 0, R: 0, J: 0 }
             });
             saveData(); renderAll(); selectClassroom(newId);
-            showToast("Grupo creado");
-        };
-
-        window.deleteGroup = (id) => {
-            if(confirm("¿Eliminar este grupo?")) {
-                db.classrooms = db.classrooms.filter(x => x.id !== id);
-                if(selectedId === id) selectedId = null;
-                saveData(); renderAll();
-            }
+            showToast("Grupo registrado");
         };
 
         window.selectClassroom = (id) => {
@@ -393,7 +382,6 @@
             renderAll();
         };
 
-        // --- ALUMNOS ---
         window.addStudent = () => {
             const input = document.getElementById('st-name');
             const name = input.value.trim().toUpperCase();
@@ -404,56 +392,91 @@
             input.value = ""; saveData(); renderAll();
         };
 
-        window.deleteStudent = (sid) => {
-            const c = db.classrooms.find(x => x.id === selectedId);
-            c.students = c.students.filter(s => s.id !== sid);
-            saveData(); renderAll();
-        };
-
-        // --- USUARIOS ---
-        window.addUser = () => {
-            const user = document.getElementById('user-name').value.trim();
-            const pass = document.getElementById('user-pass').value.trim();
-            const role = document.getElementById('user-role').value;
-            if(!user || !pass) return showToast("Datos incompletos");
-            db.users.push({ id: Date.now().toString(), user, pass, role });
-            saveData(); renderAll();
-            document.getElementById('user-name').value = "";
-            document.getElementById('user-pass').value = "";
-            showToast("Usuario registrado");
-        };
-
-        window.deleteUser = (id) => {
-            if(id === '1') return showToast("No se puede borrar el administrador maestro");
-            db.users = db.users.filter(u => u.id !== id);
-            saveData(); renderAll();
-        };
-
-        // --- ASISTENCIA ---
-        window.markStatus = (studentId, status) => {
-            tempAttendance[studentId] = status;
+        window.markStatus = (sid, status) => {
+            tempAttendance[sid] = status;
             renderAttendanceList();
         };
 
         window.saveAttendance = () => {
             const gid = document.getElementById('select-attendance-group').value;
             const c = db.classrooms.find(x => x.id === gid);
-            if(!c || c.students.length === 0) return showToast("Grupo sin alumnos");
-            
-            if(Object.keys(tempAttendance).length < c.students.length) return showToast("Debes marcar a todos los alumnos");
+            if(!c || c.students.length === 0) return showToast("Sin alumnos");
+            if(Object.keys(tempAttendance).length < c.students.length) return showToast("Faltan alumnos por marcar");
+
+            const summary = { P: 0, F: 0, R: 0, J: 0 };
+            Object.values(tempAttendance).forEach(v => summary[v]++);
 
             db.history.unshift({
                 id: Date.now(),
-                date: new Date().toLocaleDateString('es-ES'),
+                date: new Date().toLocaleDateString('es-ES').toUpperCase(),
                 time: new Date().toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'}),
                 group: c.fullName,
                 subject: c.subject,
-                present: Object.values(tempAttendance).filter(v => v === 'P').length,
-                total: c.students.length
+                summary,
+                details: {...tempAttendance}
             });
+
+            // Actualizar acumulados del grupo para estadísticas
+            c.stats.P += summary.P;
+            c.stats.F += summary.F;
+            c.stats.R += summary.R;
+            c.stats.J += summary.J;
+
             tempAttendance = {}; saveData();
             showView('history');
-            showToast("Asistencia enviada");
+            showToast("Lista guardada");
+        };
+
+        // --- STATS ENGINE ---
+        window.renderStats = () => {
+            const filter = document.getElementById('stats-group-filter').value;
+            let p=0, f=0, r=0, j=0;
+            let filteredGroups = db.classrooms;
+            
+            if(filter !== 'TODOS') {
+                filteredGroups = db.classrooms.filter(c => c.id === filter);
+            }
+
+            filteredGroups.forEach(c => {
+                p += c.stats.P; f += c.stats.F; r += c.stats.R; j += c.stats.J;
+            });
+
+            const total = p + f + r + j;
+            const perc = total > 0 ? ((p / total) * 100).toFixed(1) : 0;
+
+            document.getElementById('stats-container').innerHTML = `
+                <div class="bg-green-50 p-5 rounded-2xl border border-green-100">
+                    <p class="text-[10px] font-black text-green-700 uppercase">Asistencias</p>
+                    <h4 class="text-3xl font-black text-green-800">${p}</h4>
+                </div>
+                <div class="bg-red-50 p-5 rounded-2xl border border-red-100">
+                    <p class="text-[10px] font-black text-red-700 uppercase">Faltas</p>
+                    <h4 class="text-3xl font-black text-red-800">${f}</h4>
+                </div>
+                <div class="bg-amber-50 p-5 rounded-2xl border border-amber-100">
+                    <p class="text-[10px] font-black text-amber-700 uppercase">Retardos</p>
+                    <h4 class="text-3xl font-black text-amber-800">${r}</h4>
+                </div>
+                <div class="bg-blue-50 p-5 rounded-2xl border border-blue-100">
+                    <p class="text-[10px] font-black text-blue-700 uppercase">Justificados</p>
+                    <h4 class="text-3xl font-black text-blue-800">${j}</h4>
+                </div>
+            `;
+
+            document.getElementById('stats-table-body').innerHTML = filteredGroups.map(c => {
+                const ct = c.stats.P + c.stats.F + c.stats.R + c.stats.J;
+                const cp = ct > 0 ? ((c.stats.P / ct) * 100).toFixed(1) : 0;
+                return `
+                    <tr class="border-b border-gray-50 hover:bg-gray-50">
+                        <td class="p-4">${c.fullName}</td>
+                        <td class="p-4 text-green-600">${c.stats.P}</td>
+                        <td class="p-4 text-red-600">${c.stats.F}</td>
+                        <td class="p-4 text-amber-600">${c.stats.R}</td>
+                        <td class="p-4 text-blue-600">${c.stats.J}</td>
+                        <td class="p-4"><span class="bg-gray-100 px-2 py-1 rounded text-[10px]">${cp}%</span></td>
+                    </tr>
+                `;
+            }).join('');
         };
 
         // --- RENDERS ---
@@ -465,21 +488,26 @@
             fillSelect('adm-grade', db.catalogs.grades, 'Grado');
             fillSelect('adm-teacher', db.catalogs.teachers, 'Maestro');
             fillSelect('adm-subject', db.catalogs.subjects, 'Materia');
+            
+            const statsFilter = document.getElementById('stats-group-filter');
+            const currentFilter = statsFilter.value;
+            statsFilter.innerHTML = '<option value="TODOS">TODOS LOS GRUPOS</option>' + db.classrooms.map(c => `<option value="${c.id}">${c.fullName}</option>`).join('');
+            statsFilter.value = currentFilter || 'TODOS';
 
             document.getElementById('classroom-list').innerHTML = db.classrooms.map(c => `
                 <div class="p-3 rounded-xl border-2 flex justify-between items-center transition ${selectedId === c.id ? 'border-guinda bg-red-50' : 'bg-white border-gray-100'}">
                     <div onclick="selectClassroom('${c.id}')" class="flex-1 cursor-pointer">
-                        <p class="text-sm font-black">${c.fullName}</p>
-                        <p class="text-[9px] text-guinda font-bold uppercase">${c.subject}</p>
+                        <p class="text-[11px] font-black">${c.fullName}</p>
+                        <p class="text-[8px] text-guinda font-bold uppercase truncate">${c.subject}</p>
                     </div>
-                    <button onclick="deleteGroup('${c.id}')" class="text-gray-300 hover:text-red-600 px-2"><i class="fas fa-trash-alt text-xs"></i></button>
+                    <button onclick="deleteGroup('${c.id}')" class="text-gray-300 hover:text-red-600 px-2"><i class="fas fa-trash-alt text-[10px]"></i></button>
                 </div>
             `).join('');
 
             if(selectedId) {
                 const c = db.classrooms.find(x => x.id === selectedId);
                 document.getElementById('student-list').innerHTML = c.students.map((s, i) => `
-                    <li class="bg-gray-50 p-2 px-3 rounded-lg flex justify-between items-center text-xs font-bold border border-gray-100">
+                    <li class="bg-gray-50 p-3 rounded-xl flex justify-between items-center text-[10px] font-bold border border-gray-100 uppercase">
                         <span>${i+1}. ${s.name}</span>
                         <button onclick="deleteStudent('${s.id}')" class="text-gray-300 hover:text-red-500"><i class="fas fa-times"></i></button>
                     </li>
@@ -487,27 +515,43 @@
             }
 
             const attSel = document.getElementById('select-attendance-group');
-            attSel.innerHTML = db.classrooms.map(c => `<option value="${c.id}">${c.fullName} - ${c.subject}</option>`).join('') || '<option value="">Crea un grupo primero</option>';
+            attSel.innerHTML = db.classrooms.map(c => `<option value="${c.id}">${c.fullName} - ${c.subject}</option>`).join('') || '<option value="">SIN GRUPOS</option>';
             renderAttendanceList();
 
             document.getElementById('list-users').innerHTML = db.users.map(u => `
                 <div class="p-4 bg-gray-50 rounded-2xl border flex justify-between items-center">
                     <div>
-                        <p class="font-black text-sm">${u.user}</p>
-                        <p class="text-[10px] uppercase font-bold text-guinda">${u.role}</p>
+                        <p class="font-black text-xs uppercase">${u.user}</p>
+                        <p class="text-[9px] uppercase font-bold text-guinda">${u.role}</p>
                     </div>
                     ${u.id !== '1' ? `<button onclick="deleteUser('${u.id}')" class="text-gray-300 hover:text-red-600"><i class="fas fa-user-minus"></i></button>` : ''}
                 </div>
             `).join('');
 
             document.getElementById('history-list').innerHTML = db.history.map(h => `
-                <div class="bg-white p-4 rounded-2xl border-l-4 border-guinda shadow-sm flex justify-between items-center">
+                <div class="bg-white p-5 rounded-3xl border shadow-sm flex flex-col md:flex-row justify-between gap-4">
                     <div>
-                        <b class="text-sm">${h.group} - ${h.subject}</b>
-                        <p class="text-[10px] text-gray-400 font-bold mt-1 uppercase">${h.date} | ${h.time}</p>
+                        <b class="text-sm uppercase tracking-tight">${h.group}</b>
+                        <p class="text-[9px] text-guinda font-black uppercase mb-2">${h.subject}</p>
+                        <p class="text-[10px] text-gray-400 font-bold uppercase">${h.date} | ${h.time}</p>
                     </div>
-                    <div class="bg-red-50 px-3 py-1 rounded-lg text-center border border-red-100">
-                        <span class="block text-lg font-black text-guinda">${h.present}/${h.total}</span>
+                    <div class="flex gap-2">
+                        <div class="text-center px-4 py-2 bg-green-50 rounded-xl border border-green-100 min-w-[60px]">
+                            <span class="block text-xs font-black text-green-700">${h.summary.P}</span>
+                            <span class="text-[8px] font-bold text-green-600 uppercase">Asis</span>
+                        </div>
+                        <div class="text-center px-4 py-2 bg-red-50 rounded-xl border border-red-100 min-w-[60px]">
+                            <span class="block text-xs font-black text-red-700">${h.summary.F}</span>
+                            <span class="text-[8px] font-bold text-red-600 uppercase">Falt</span>
+                        </div>
+                        <div class="text-center px-4 py-2 bg-amber-50 rounded-xl border border-amber-100 min-w-[60px]">
+                            <span class="block text-xs font-black text-amber-700">${h.summary.R}</span>
+                            <span class="text-[8px] font-bold text-amber-600 uppercase">Ret</span>
+                        </div>
+                        <div class="text-center px-4 py-2 bg-blue-50 rounded-xl border border-blue-100 min-w-[60px]">
+                            <span class="block text-xs font-black text-blue-700">${h.summary.J}</span>
+                            <span class="text-[8px] font-bold text-blue-600 uppercase">Just</span>
+                        </div>
                     </div>
                 </div>
             `).join('');
@@ -515,16 +559,16 @@
 
         function renderCatalog(type, listId) {
             document.getElementById(listId).innerHTML = db.catalogs[type].map(val => `
-                <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg text-xs font-bold mb-1">
+                <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg text-[10px] font-bold mb-1 uppercase">
                     <span class="truncate pr-2">${val}</span>
                     <button onclick="removeFromCatalog('${type}', '${val}')" class="text-gray-300 hover:text-red-500"><i class="fas fa-times"></i></button>
                 </div>
-            `).join('') || '<p class="text-[10px] text-gray-300 italic">Lista vacía</p>';
+            `).join('');
         }
 
         function fillSelect(id, list, label) {
             const s = document.getElementById(id);
-            s.innerHTML = `<option value="">Seleccionar ${label}</option>` + list.map(v => `<option value="${v}">${v}</option>`).join('');
+            s.innerHTML = `<option value="">${label.toUpperCase()}</option>` + list.map(v => `<option value="${v}">${v}</option>`).join('');
         }
 
         window.renderAttendanceList = () => {
@@ -538,24 +582,24 @@
 
             grid.innerHTML = c.students.map(s => {
                 const status = tempAttendance[s.id];
+                const color = status === 'P' ? 'bg-green-600' : (status === 'F' ? 'bg-red-600' : (status === 'R' ? 'bg-amber-500' : (status === 'J' ? 'bg-blue-500' : 'bg-gray-100')));
+                const textColor = status ? 'text-white' : 'text-gray-400';
+
                 return `
-                    <div class="bg-white p-4 rounded-3xl border flex justify-between items-center shadow-sm ${status ? 'ring-2 ring-red-50 border-guinda' : ''}">
-                        <div class="max-w-[60%]">
-                            <p class="font-bold text-gray-700 uppercase text-[11px] truncate">${s.name}</p>
-                            <p class="text-[9px] font-black uppercase ${status === 'P' ? 'text-green-600' : (status === 'F' ? 'text-red-600' : 'text-gray-300')}">
-                                ${status === 'P' ? 'Presente' : (status === 'F' ? 'Falta' : 'Sin marcar')}
-                            </p>
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="markStatus('${s.id}', 'P')" class="w-10 h-10 rounded-xl font-black ${status === 'P' ? 'bg-green-600 text-white shadow-md' : 'bg-gray-100 text-gray-400'}">P</button>
-                            <button onclick="markStatus('${s.id}', 'F')" class="w-10 h-10 rounded-xl font-black ${status === 'F' ? 'bg-red-600 text-white shadow-md' : 'bg-gray-100 text-gray-400'}">F</button>
+                    <div class="bg-white p-4 rounded-3xl border flex flex-col gap-3 shadow-sm transition-all ${status ? 'border-guinda' : ''}">
+                        <p class="font-black text-gray-800 uppercase text-[10px] leading-tight h-8 overflow-hidden">${s.name}</p>
+                        <div class="grid grid-cols-4 gap-1">
+                            <button onclick="markStatus('${s.id}', 'P')" class="py-2 rounded-lg font-black text-[10px] ${status==='P' ? 'bg-green-600 text-white shadow-inner' : 'bg-gray-50 text-gray-400'}">P</button>
+                            <button onclick="markStatus('${s.id}', 'F')" class="py-2 rounded-lg font-black text-[10px] ${status==='F' ? 'bg-red-600 text-white shadow-inner' : 'bg-gray-50 text-gray-400'}">F</button>
+                            <button onclick="markStatus('${s.id}', 'R')" class="py-2 rounded-lg font-black text-[10px] ${status==='R' ? 'bg-amber-500 text-white shadow-inner' : 'bg-gray-50 text-gray-400'}">R</button>
+                            <button onclick="markStatus('${s.id}', 'J')" class="py-2 rounded-lg font-black text-[10px] ${status==='J' ? 'bg-blue-500 text-white shadow-inner' : 'bg-gray-50 text-gray-400'}">J</button>
                         </div>
                     </div>
                 `;
             }).join('');
         };
 
-        // --- EXTRAS ---
+        // --- UTILS ---
         window.openImportModal = () => document.getElementById('modal-import').classList.remove('hidden');
         window.closeImportModal = () => document.getElementById('modal-import').classList.add('hidden');
         window.processImport = () => {
@@ -566,36 +610,35 @@
             names.forEach(n => c.students.push({ id: Math.random().toString(36).substr(2,9), name: n }));
             c.students.sort((a,b) => a.name.localeCompare(b.name));
             saveData(); renderAll(); closeImportModal();
-            showToast(`${names.length} alumnos agregados`);
+            showToast(`Cargados`);
         };
 
         window.exportBackup = () => {
             const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url; a.download = `backup_cbtis291_${new Date().toISOString().slice(0,10)}.json`;
-            a.click();
+            const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+            a.download = `CBTIS291_BACKUP_${new Date().toISOString().slice(0,10)}.json`; a.click();
         };
 
         window.importBackup = (e) => {
-            const file = e.target.files[0];
-            if(!file) return;
+            const file = e.target.files[0]; if(!file) return;
             const reader = new FileReader();
             reader.onload = (ev) => {
                 try {
                     const data = JSON.parse(ev.target.result);
-                    if(data.classrooms) { db = data; saveData(); renderAll(); showToast("Sistema Restaurado"); }
-                } catch(err) { showToast("Error al cargar archivo"); }
+                    if(data.classrooms) { db = data; saveData(); renderAll(); showToast("Restaurado"); }
+                } catch(err) { showToast("Error de archivo"); }
             };
             reader.readAsText(file);
         };
 
-        function saveData() { localStorage.setItem('edu_db_cbtis', JSON.stringify(db)); }
-        window.clearHistory = () => { if(confirm("¿Borrar todo el historial de pases de lista?")) { db.history = []; saveData(); renderAll(); }};
+        function saveData() { localStorage.setItem('edu_db_cbtis_v2', JSON.stringify(db)); }
+        window.deleteGroup = (id) => { if(confirm("¿Eliminar?")) { db.classrooms = db.classrooms.filter(x => x.id !== id); saveData(); renderAll(); }};
+        window.deleteStudent = (sid) => { const c = db.classrooms.find(x => x.id === selectedId); c.students = c.students.filter(s => s.id !== sid); saveData(); renderAll(); };
+        window.clearHistory = () => { if(confirm("¿Borrar bitácora?")) { db.history = []; saveData(); renderAll(); }};
         function showToast(m) {
             const t = document.getElementById('toast'); t.innerText = m;
             t.classList.replace('opacity-0', 'opacity-100');
-            setTimeout(() => t.classList.replace('opacity-100', 'opacity-0'), 3000);
+            setTimeout(() => t.classList.replace('opacity-100', 'opacity-0'), 2500);
         }
         function resetTempAttendance() { tempAttendance = {}; }
     </script>
