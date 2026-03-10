@@ -3,18 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduControl Pro - Gestión Escolar</title>
+    <title>EduControl - CBTis 291</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --color-guinda: #800020;
+            --color-guinda-dark: #600018;
+            --color-guinda-light: #a02040;
+        }
+
         body { font-family: 'Inter', sans-serif; }
-        .login-gradient { background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%); }
+        
+        .bg-guinda { background-color: var(--color-guinda); }
+        .bg-guinda-dark { background-color: var(--color-guinda-dark); }
+        .text-guinda { color: var(--color-guinda); }
+        .border-guinda { border-color: var(--color-guinda); }
+        .focus-border-guinda:focus { border-color: var(--color-guinda); }
+        
+        .login-gradient { 
+            background: linear-gradient(135deg, var(--color-guinda) 0%, #300008 100%); 
+        }
+        
         .view { transition: opacity 0.3s ease; }
         .hidden { display: none !important; }
+        
         .custom-scroll::-webkit-scrollbar { width: 6px; }
         .custom-scroll::-webkit-scrollbar-track { background: #f1f1f1; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #991b1b; border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: var(--color-guinda); border-radius: 10px; }
+
+        .btn-guinda {
+            background-color: var(--color-guinda);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .btn-guinda:hover {
+            background-color: var(--color-guinda-dark);
+            box-shadow: 0 4px 12px rgba(128, 0, 32, 0.3);
+        }
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen text-gray-900">
@@ -23,238 +51,257 @@
     <div id="view-login" class="fixed inset-0 z-[1000] login-gradient flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl p-8 space-y-8">
             <div class="text-center">
-                <div class="inline-flex p-4 bg-red-50 rounded-2xl mb-4">
-                    <i class="fas fa-shield-alt text-red-900 text-3xl"></i>
+                <div class="inline-flex p-2 bg-gray-50 rounded-2xl mb-4 border border-gray-100">
+                    <!-- Imagen del Logo Proporcionada -->
+                    <img src="image_8739e6.png" alt="Logo CBTis 291" class="h-24 w-auto object-contain" onerror="this.src='https://via.placeholder.com/150?text=CBTis+291'">
                 </div>
-                <h1 class="text-3xl font-black text-gray-800 text-center">EduControl</h1>
-                <p class="text-gray-400 font-medium text-center">Control de Acceso Escolar</p>
+                <h1 class="text-3xl font-black text-gray-800 text-center uppercase tracking-tight">EduControl</h1>
+                <p class="text-gray-400 font-medium text-center">CBTis 291 - Gestión Escolar</p>
             </div>
             <div class="space-y-4">
                 <div>
                     <label class="text-[10px] font-black text-gray-400 uppercase ml-1">Usuario</label>
-                    <input type="text" id="login-user" class="w-full bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 outline-none focus:border-red-800 transition font-bold" placeholder="admin">
+                    <input type="text" id="login-user" class="w-full bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 outline-none focus-border-guinda transition font-bold" placeholder="admin">
                 </div>
                 <div>
                     <label class="text-[10px] font-black text-gray-400 uppercase ml-1">Contraseña</label>
-                    <input type="password" id="login-pass" class="w-full bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 outline-none focus:border-red-800 transition font-bold" placeholder="••••••••">
+                    <input type="password" id="login-pass" class="w-full bg-gray-50 border-2 border-gray-100 rounded-xl px-4 py-3 outline-none focus-border-guinda transition font-bold" placeholder="••••••••">
                 </div>
-                <button onclick="attemptLogin()" class="w-full bg-red-900 text-white py-4 rounded-2xl font-black hover:bg-red-800 shadow-lg transition font-bold">
-                    Entrar al Sistema
+                <button onclick="attemptLogin()" class="w-full btn-guinda py-4 rounded-2xl font-black shadow-lg">
+                    Acceder al Sistema
                 </button>
             </div>
-            <p id="login-error" class="text-center text-red-600 font-bold text-xs hidden italic">Credenciales incorrectas</p>
+            <p id="login-error" class="text-center text-red-600 font-bold text-xs hidden italic">Credenciales incorrectas o usuario inexistente</p>
         </div>
     </div>
 
-    <!-- MODAL DE IMPORTACIÓN MASIVA (TEXTO) -->
+    <!-- MODAL DE IMPORTACIÓN MASIVA -->
     <div id="modal-import" class="fixed inset-0 z-[1100] bg-black/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-lg rounded-3xl shadow-2xl p-8 space-y-6">
             <div>
                 <h3 class="text-2xl font-black text-gray-800">Importar Alumnos</h3>
-                <p class="text-sm text-gray-500 font-medium leading-relaxed">Pega una lista de nombres (uno por línea).</p>
+                <p class="text-sm text-gray-500 font-medium">Pega los nombres de los alumnos (uno por línea).</p>
             </div>
-            <textarea id="import-area" class="w-full h-64 bg-gray-50 border-2 border-gray-100 rounded-2xl p-4 outline-none focus:border-red-800 font-mono text-sm custom-scroll" placeholder="Ejemplo:&#10;JUAN PEREZ..."></textarea>
+            <textarea id="import-area" class="w-full h-64 bg-gray-50 border-2 border-gray-100 rounded-2xl p-4 outline-none focus-border-guinda font-mono text-sm custom-scroll" placeholder="Ejemplo:&#10;JUAN PEREZ..."></textarea>
             <div class="flex gap-3">
                 <button onclick="closeImportModal()" class="flex-1 py-3 rounded-xl font-black text-gray-500 hover:bg-gray-100 transition">Cancelar</button>
-                <button onclick="processImport()" class="flex-[2] bg-red-900 text-white py-3 rounded-xl font-black hover:bg-red-800 shadow-lg transition">Añadir a la Lista</button>
+                <button onclick="processImport()" class="flex-[2] btn-guinda py-3 rounded-xl font-black shadow-lg">Cargar Lista</button>
             </div>
         </div>
     </div>
 
     <!-- CONTENIDO PRINCIPAL -->
     <div id="main-content" class="hidden">
-        <nav class="bg-red-900 text-white shadow-2xl sticky top-0 z-50">
-            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-                <div class="flex items-center gap-2">
-                    <i class="fas fa-user-check text-xl"></i>
-                    <h1 class="text-lg font-extrabold hidden sm:block">EduControl</h1>
+        <nav class="bg-guinda text-white shadow-2xl sticky top-0 z-50">
+            <div class="container mx-auto px-4 py-2 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <img src="image_8739e6.png" alt="Logo" class="h-10 w-auto brightness-0 invert">
+                    <h1 class="text-lg font-extrabold hidden sm:block tracking-tighter uppercase">CBTis 291</h1>
                 </div>
                 <div class="flex gap-1 sm:gap-2">
-                    <button onclick="showView('attendance')" class="nav-btn px-3 py-2 rounded-lg hover:bg-red-800 text-[11px] sm:text-sm font-bold flex items-center gap-1">
+                    <button onclick="showView('attendance')" class="nav-btn px-3 py-2 rounded-lg hover:bg-guinda-dark text-[11px] sm:text-sm font-bold flex items-center gap-1">
                         <i class="fas fa-list-check"></i> <span class="hidden xs:inline">Asistencia</span>
                     </button>
-                    <button onclick="showView('admin')" class="nav-btn px-3 py-2 rounded-lg hover:bg-red-800 text-[11px] sm:text-sm font-bold flex items-center gap-1">
-                        <i class="fas fa-cog"></i> <span class="hidden xs:inline">Configurar</span>
+                    <button id="nav-admin" onclick="showView('admin')" class="nav-btn px-3 py-2 rounded-lg hover:bg-guinda-dark text-[11px] sm:text-sm font-bold flex items-center gap-1">
+                        <i class="fas fa-tools"></i> <span class="hidden xs:inline">Administrar</span>
                     </button>
-                    <button onclick="showView('history')" class="nav-btn px-3 py-2 rounded-lg hover:bg-red-800 text-[11px] sm:text-sm font-bold flex items-center gap-1">
+                    <button onclick="showView('history')" class="nav-btn px-3 py-2 rounded-lg hover:bg-guinda-dark text-[11px] sm:text-sm font-bold flex items-center gap-1">
                         <i class="fas fa-history"></i> <span class="hidden xs:inline">Historial</span>
                     </button>
-                    <button onclick="logout()" class="px-3 py-2 rounded-lg bg-red-950 text-[11px] sm:text-sm font-bold">
-                        <i class="fas fa-sign-out-alt"></i>
+                    <button onclick="logout()" class="px-3 py-2 rounded-lg bg-black/20 hover:bg-black/40 text-[11px] sm:text-sm font-bold ml-2">
+                        <i class="fas fa-power-off"></i>
                     </button>
                 </div>
             </div>
         </nav>
 
-        <main class="container mx-auto px-4 py-6 max-w-5xl">
+        <main class="container mx-auto px-4 py-6 max-w-6xl">
             <!-- VISTA: ASISTENCIA -->
             <div id="view-attendance" class="view space-y-6">
-                <div id="schedule-warning" class="bg-amber-50 border-2 border-amber-200 p-4 rounded-2xl flex items-center gap-3 hidden animate-pulse">
-                    <i class="fas fa-exclamation-triangle text-amber-600"></i>
-                    <p class="text-amber-800 text-xs font-bold uppercase">Aviso: El grupo no tiene clase programada para hoy.</p>
-                </div>
-
                 <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 space-y-4">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div>
-                            <h2 class="text-2xl font-black text-gray-800">Pase de Lista</h2>
-                            <p id="display-date" class="text-red-900 font-bold text-sm uppercase"></p>
+                            <h2 class="text-2xl font-black text-gray-800">Control de Asistencia</h2>
+                            <p id="display-date" class="text-guinda font-bold text-sm uppercase"></p>
                         </div>
                         <div class="flex flex-wrap gap-2 items-center w-full md:w-auto">
-                            <select id="select-attendance-group" onchange="resetTempAttendance(); validateScheduleToday(); renderAttendanceList();" class="flex-1 md:flex-none bg-gray-50 border-2 p-3 rounded-xl font-bold outline-none focus:border-red-800 min-w-[200px]"></select>
+                            <select id="select-attendance-group" onchange="resetTempAttendance(); renderAttendanceList();" class="flex-1 md:flex-none bg-gray-50 border-2 p-3 rounded-xl font-bold outline-none focus-border-guinda min-w-[200px]"></select>
                             <button onclick="saveAttendance()" class="bg-green-600 text-white px-6 py-3 rounded-xl font-black shadow-lg hover:bg-green-700 transition flex items-center gap-2">
-                                <i class="fas fa-save"></i> Guardar
+                                <i class="fas fa-save"></i> Finalizar
                             </button>
                         </div>
                     </div>
-                    
-                    <div id="attendance-stats" class="grid grid-cols-3 gap-2 border-t pt-4 hidden">
-                        <div class="text-center p-2 bg-blue-50 rounded-xl">
-                            <span class="block text-[10px] font-black text-blue-900 uppercase">Total</span>
-                            <span id="stat-total" class="text-lg font-black text-blue-900">0</span>
-                        </div>
-                        <div class="text-center p-2 bg-green-50 rounded-xl">
-                            <span class="block text-[10px] font-black text-green-900 uppercase">Presentes</span>
-                            <span id="stat-present" class="text-lg font-black text-green-900">0</span>
-                        </div>
-                        <div class="text-center p-2 bg-red-50 rounded-xl">
-                            <span class="block text-[10px] font-black text-red-900 uppercase">Faltas</span>
-                            <span id="stat-absent" class="text-lg font-black text-red-900">0</span>
-                        </div>
-                    </div>
                 </div>
-
-                <div id="attendance-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
-                
+                <div id="attendance-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
                 <div id="no-students-msg" class="hidden text-center py-20 bg-white rounded-3xl border-2 border-dashed border-gray-200">
-                    <div class="bg-gray-50 inline-flex p-6 rounded-full mb-4">
-                        <i class="fas fa-users-slash text-gray-300 text-4xl"></i>
-                    </div>
-                    <p class="text-gray-400 font-bold">No hay alumnos para pasar lista.</p>
+                    <p class="text-gray-400 font-bold">No hay alumnos registrados en este grupo.</p>
                 </div>
             </div>
 
-            <!-- VISTA: ADMIN -->
-            <div id="view-admin" class="view hidden space-y-6">
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <div class="space-y-6">
-                        <!-- Crear Grupo -->
-                        <section class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 h-fit">
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 id="admin-group-title" class="text-xl font-black tracking-tight text-red-900">1. Grupo</h3>
-                                <button id="btn-cancel-edit" onclick="resetGroupForm()" class="hidden text-[10px] font-black text-gray-400 uppercase">Cancelar</button>
-                            </div>
-                            <div class="space-y-3">
-                                <input type="text" id="adm-grade" placeholder="Grado (ej. 1ro)" class="w-full bg-gray-50 border p-3 rounded-xl font-bold focus:ring-2 ring-red-200 outline-none">
-                                <input type="text" id="adm-group" placeholder="Grupo (ej. A)" class="w-full bg-gray-50 border p-3 rounded-xl font-bold uppercase focus:ring-2 ring-red-200 outline-none">
-                                <input type="text" id="adm-teacher" placeholder="Maestro" class="w-full bg-gray-50 border p-3 rounded-xl font-bold focus:ring-2 ring-red-200 outline-none">
-                                <input type="text" id="adm-subject" placeholder="Materia" class="w-full bg-gray-50 border p-3 rounded-xl font-bold focus:ring-2 ring-red-200 outline-none">
-                                <button id="btn-save-group" onclick="saveClassroom()" class="w-full bg-red-900 text-white py-3 rounded-xl font-black hover:bg-red-800 transition shadow-md">Crear Grupo</button>
-                            </div>
-                            <div class="mt-8">
-                                <h4 class="text-xs font-black text-gray-400 uppercase mb-3 tracking-widest border-b pb-2">Lista de Grupos</h4>
-                                <div id="classroom-list" class="space-y-2 max-h-[300px] overflow-y-auto custom-scroll"></div>
-                            </div>
-                        </section>
-
-                        <!-- Respaldos (Backup) -->
-                        <section class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 h-fit">
-                            <h3 class="text-xl font-black tracking-tight text-gray-800 mb-4">Seguridad</h3>
-                            <div class="grid grid-cols-2 gap-3">
-                                <button onclick="exportBackup()" class="flex flex-col items-center justify-center p-3 bg-blue-50 border-2 border-blue-100 rounded-2xl hover:bg-blue-100 transition">
-                                    <i class="fas fa-file-export text-blue-600 mb-1"></i>
-                                    <span class="text-[10px] font-black text-blue-800 uppercase">Exportar</span>
-                                </button>
-                                <label class="flex flex-col items-center justify-center p-3 bg-amber-50 border-2 border-amber-100 rounded-2xl hover:bg-amber-100 transition cursor-pointer">
-                                    <i class="fas fa-file-import text-amber-600 mb-1"></i>
-                                    <span class="text-[10px] font-black text-amber-800 uppercase">Importar</span>
-                                    <input type="file" id="import-file" class="hidden" accept=".json" onchange="importBackup(event)">
-                                </label>
-                            </div>
-                            <p class="text-[9px] text-gray-400 font-medium mt-3 text-center">Usa esto para mover tus datos a otro dispositivo.</p>
-                        </section>
+            <!-- VISTA: ADMINISTRACIÓN -->
+            <div id="view-admin" class="view hidden space-y-8">
+                <div class="flex flex-col md:flex-row justify-between items-end gap-4">
+                    <div>
+                        <h2 class="text-3xl font-black text-gray-800">Panel Maestro</h2>
+                        <p class="text-gray-500 font-medium">Configura la estructura del CBTis 291.</p>
                     </div>
+                    <div class="flex gap-2">
+                        <button onclick="exportBackup()" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-xl font-black text-xs uppercase hover:bg-gray-200 transition">
+                            <i class="fas fa-download mr-1"></i> Respaldo
+                        </button>
+                        <label class="bg-amber-50 text-amber-900 px-4 py-2 rounded-xl font-black text-xs uppercase hover:bg-amber-100 transition cursor-pointer border border-amber-200">
+                            <i class="fas fa-upload mr-1"></i> Restaurar
+                            <input type="file" id="import-file" class="hidden" accept=".json" onchange="importBackup(event)">
+                        </label>
+                    </div>
+                </div>
 
-                    <section id="panel-details" class="lg:col-span-2 hidden space-y-6">
-                        <!-- Panel de Alumnos -->
+                <!-- TABS -->
+                <div class="flex flex-wrap gap-2 border-b border-gray-200 pb-1">
+                    <button onclick="showAdminTab('catalogos')" class="admin-tab-btn px-4 py-2 font-black text-sm uppercase tracking-wider text-guinda border-b-4 border-guinda">Catálogos</button>
+                    <button onclick="showAdminTab('grupos')" class="admin-tab-btn px-4 py-2 font-black text-sm uppercase tracking-wider text-gray-400 border-b-4 border-transparent">Grupos y Alumnos</button>
+                    <button onclick="showAdminTab('usuarios')" class="admin-tab-btn px-4 py-2 font-black text-sm uppercase tracking-wider text-gray-400 border-b-4 border-transparent">Usuarios</button>
+                </div>
+
+                <!-- TAB: CATÁLOGOS -->
+                <div id="admin-tab-catalogos" class="admin-tab space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-                            <div class="flex justify-between items-start mb-4">
-                                <h3 class="text-xl font-black flex items-center gap-2 text-gray-800">
-                                    <i class="fas fa-users text-red-900"></i> 2. Alumnos
-                                </h3>
-                                <div class="flex flex-col items-end">
-                                    <span id="current-group-label" class="bg-red-900 text-white px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider mb-2"></span>
-                                    <button onclick="openImportModal()" class="bg-gray-100 text-gray-700 px-3 py-1 rounded-lg text-[10px] font-black uppercase hover:bg-gray-200 transition flex items-center gap-1">
-                                        <i class="fas fa-file-import"></i> Carga Masiva
-                                    </button>
-                                </div>
+                            <h3 class="text-lg font-black mb-4 flex items-center gap-2"><i class="fas fa-layer-group text-guinda"></i> Grados</h3>
+                            <div class="flex gap-2 mb-4">
+                                <input type="text" id="cat-grade-input" placeholder="Ej. 1ro" class="flex-1 bg-gray-50 border p-2 rounded-xl text-sm font-bold outline-none">
+                                <button onclick="addToCatalog('grades', 'cat-grade-input')" class="btn-guinda px-4 rounded-xl transition"><i class="fas fa-plus"></i></button>
                             </div>
-                            <div class="flex gap-2 mb-6">
-                                <input type="text" id="st-name" placeholder="Nombre completo" class="flex-1 bg-gray-50 border p-3 rounded-xl font-bold focus:ring-2 ring-red-200 outline-none uppercase">
-                                <button onclick="addStudent()" class="bg-red-900 text-white px-6 rounded-xl hover:bg-red-800 transition shadow-sm"><i class="fas fa-plus"></i></button>
-                            </div>
-                            <div class="max-h-[350px] overflow-y-auto bg-gray-50 rounded-2xl p-4 custom-scroll">
-                                <ul id="student-list" class="space-y-2"></ul>
-                            </div>
+                            <div id="list-grades" class="space-y-1 max-h-48 overflow-y-auto custom-scroll"></div>
                         </div>
-
-                        <!-- Panel de Horario -->
                         <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-                            <h3 class="text-xl font-black mb-4 flex items-center gap-2 text-gray-800">
-                                <i class="fas fa-clock text-red-900"></i> 3. Horario
-                            </h3>
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4">
-                                <select id="sch-day" class="bg-gray-50 border p-3 rounded-xl font-bold outline-none">
-                                    <option value="Lunes">Lunes</option>
-                                    <option value="Martes">Martes</option>
-                                    <option value="Miércoles">Miércoles</option>
-                                    <option value="Jueves">Jueves</option>
-                                    <option value="Viernes">Viernes</option>
-                                </select>
-                                <div class="flex items-center gap-1 bg-gray-50 border rounded-xl p-2 px-3">
-                                    <span class="text-[10px] font-bold text-gray-400 uppercase">De:</span>
-                                    <input type="time" id="sch-start" class="bg-transparent font-bold outline-none w-full">
-                                </div>
-                                <div class="flex items-center gap-1 bg-gray-50 border rounded-xl p-2 px-3">
-                                    <span class="text-[10px] font-bold text-gray-400 uppercase">A:</span>
-                                    <input type="time" id="sch-end" class="bg-transparent font-bold outline-none w-full">
-                                </div>
+                            <h3 class="text-lg font-black mb-4 flex items-center gap-2"><i class="fas fa-user-tie text-guinda"></i> Maestros</h3>
+                            <div class="flex gap-2 mb-4">
+                                <input type="text" id="cat-teacher-input" placeholder="Nombre Maestro" class="flex-1 bg-gray-50 border p-2 rounded-xl text-sm font-bold outline-none uppercase">
+                                <button onclick="addToCatalog('teachers', 'cat-teacher-input')" class="btn-guinda px-4 rounded-xl transition"><i class="fas fa-plus"></i></button>
                             </div>
-                            <button onclick="addSchedule()" class="w-full bg-gray-800 text-white py-3 rounded-xl font-black hover:bg-gray-700 transition shadow-sm mb-4">Vincular Horario</button>
-                            <div id="schedule-display" class="flex flex-wrap gap-2"></div>
+                            <div id="list-teachers" class="space-y-1 max-h-48 overflow-y-auto custom-scroll"></div>
+                        </div>
+                        <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                            <h3 class="text-lg font-black mb-4 flex items-center gap-2"><i class="fas fa-book text-guinda"></i> Materias</h3>
+                            <div class="flex gap-2 mb-4">
+                                <input type="text" id="cat-subject-input" placeholder="Ej. Matemáticas" class="flex-1 bg-gray-50 border p-2 rounded-xl text-sm font-bold outline-none uppercase">
+                                <button onclick="addToCatalog('subjects', 'cat-subject-input')" class="btn-guinda px-4 rounded-xl transition"><i class="fas fa-plus"></i></button>
+                            </div>
+                            <div id="list-subjects" class="space-y-1 max-h-48 overflow-y-auto custom-scroll"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB: GRUPOS -->
+                <div id="admin-tab-grupos" class="admin-tab hidden grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <section class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 h-fit">
+                        <h3 class="text-xl font-black text-guinda mb-4">Configurar Grupo</h3>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="text-[10px] font-black text-gray-400 uppercase">Grado</label>
+                                <select id="adm-grade" class="w-full bg-gray-50 border p-3 rounded-xl font-bold outline-none"></select>
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black text-gray-400 uppercase">Grupo</label>
+                                <input type="text" id="adm-group" placeholder="Ej. A" class="w-full bg-gray-50 border p-3 rounded-xl font-bold uppercase outline-none">
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black text-gray-400 uppercase">Maestro Asignado</label>
+                                <select id="adm-teacher" class="w-full bg-gray-50 border p-3 rounded-xl font-bold outline-none"></select>
+                            </div>
+                            <div>
+                                <label class="text-[10px] font-black text-gray-400 uppercase">Materia</label>
+                                <select id="adm-subject" class="w-full bg-gray-50 border p-3 rounded-xl font-bold outline-none"></select>
+                            </div>
+                            <button onclick="saveClassroom()" class="w-full btn-guinda py-3 rounded-xl font-black shadow-md">Crear / Guardar Grupo</button>
+                        </div>
+                        <div class="mt-8">
+                            <h4 class="text-xs font-black text-gray-400 uppercase mb-3 tracking-widest border-b pb-2">Grupos del Plantel</h4>
+                            <div id="classroom-list" class="space-y-2 max-h-60 overflow-y-auto custom-scroll"></div>
                         </div>
                     </section>
+
+                    <section id="panel-details" class="lg:col-span-2 hidden space-y-6">
+                        <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-xl font-black flex items-center gap-2"><i class="fas fa-users text-guinda"></i> Alumnos del Grupo</h3>
+                                <button onclick="openImportModal()" class="text-xs font-black text-guinda uppercase bg-red-50 px-3 py-1 rounded-lg hover:bg-red-100 transition">Importación Masiva</button>
+                            </div>
+                            <div class="flex gap-2 mb-6">
+                                <input type="text" id="st-name" placeholder="Nombre completo" class="flex-1 bg-gray-50 border p-3 rounded-xl font-bold uppercase outline-none focus-border-guinda">
+                                <button onclick="addStudent()" class="btn-guinda px-6 rounded-xl shadow-sm"><i class="fas fa-plus"></i></button>
+                            </div>
+                            <ul id="student-list" class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-80 overflow-y-auto custom-scroll p-1"></ul>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- TAB: USUARIOS -->
+                <div id="admin-tab-usuarios" class="admin-tab hidden space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 h-fit">
+                            <h3 class="text-xl font-black text-guinda mb-4">Crear Usuario</h3>
+                            <div class="space-y-3">
+                                <input type="text" id="user-name" placeholder="Usuario" class="w-full bg-gray-50 border p-3 rounded-xl font-bold outline-none">
+                                <input type="password" id="user-pass" placeholder="Contraseña" class="w-full bg-gray-50 border p-3 rounded-xl font-bold outline-none">
+                                <select id="user-role" class="w-full bg-gray-50 border p-3 rounded-xl font-bold outline-none">
+                                    <option value="admin">Administrador (Total)</option>
+                                    <option value="staff">Maestro/Prefecto (Sólo Lista)</option>
+                                </select>
+                                <button onclick="addUser()" class="w-full btn-guinda py-3 rounded-xl font-black shadow-md">Registrar Usuario</button>
+                            </div>
+                        </div>
+                        <div class="md:col-span-2 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+                            <h3 class="text-xl font-black mb-4">Cuentas Activas</h3>
+                            <div id="list-users" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!-- VISTA: HISTORIAL -->
             <div id="view-history" class="view hidden space-y-4">
                 <div class="flex justify-between items-center">
-                    <h2 class="text-2xl font-black">Historial</h2>
-                    <button onclick="clearHistory()" class="text-[10px] font-black text-red-900 uppercase underline">Limpiar registros</button>
+                    <h2 class="text-2xl font-black">Historial de Registros</h2>
+                    <button onclick="clearHistory()" class="text-[10px] font-black text-red-600 uppercase underline">Limpiar Historial</button>
                 </div>
                 <div id="history-list" class="grid gap-3"></div>
             </div>
         </main>
     </div>
 
-    <!-- NOTIFICACIÓN TOAST -->
-    <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[2000] opacity-0 transition-all duration-300 bg-gray-900 text-white px-8 py-4 rounded-2xl font-bold shadow-2xl pointer-events-none text-center min-w-[200px]"></div>
+    <!-- TOAST -->
+    <div id="toast" class="fixed bottom-8 left-1/2 -translate-x-1/2 z-[2000] opacity-0 transition-all duration-300 bg-gray-900 text-white px-8 py-4 rounded-2xl font-bold shadow-2xl pointer-events-none text-center"></div>
 
     <script>
-        let classrooms = JSON.parse(localStorage.getItem('edu_classrooms')) || [];
-        let historyRecords = JSON.parse(localStorage.getItem('edu_history')) || [];
+        // --- BASE DE DATOS Y ESTADO ---
+        let db = JSON.parse(localStorage.getItem('edu_db_cbtis')) || {
+            classrooms: [],
+            history: [],
+            users: [{id: '1', user: 'admin', pass: '1234', role: 'admin'}],
+            catalogs: {
+                grades: ["1ro", "2do", "3ro", "4to", "5to", "6to"],
+                teachers: [],
+                subjects: []
+            }
+        };
+
+        let currentUser = null;
         let selectedId = null;
         let tempAttendance = {};
-        let editingGroupId = null;
 
         // --- AUTH ---
         window.attemptLogin = () => {
             const u = document.getElementById('login-user').value;
             const p = document.getElementById('login-pass').value;
-            if (u === "admin" && p === "1234") {
+            const found = db.users.find(x => x.user === u && x.pass === p);
+            
+            if (found) {
+                currentUser = found;
                 document.getElementById('view-login').classList.add('hidden');
                 document.getElementById('main-content').classList.remove('hidden');
+                if(currentUser.role !== 'admin') document.getElementById('nav-admin').classList.add('hidden');
                 initApp();
             } else {
                 const err = document.getElementById('login-error');
@@ -265,132 +312,79 @@
 
         window.logout = () => { location.reload(); };
 
-        // --- VISTAS ---
+        // --- NAVEGACIÓN ---
         window.showView = (v) => {
+            if (v === 'admin' && currentUser.role !== 'admin') return;
             document.querySelectorAll('.view').forEach(e => e.classList.add('hidden'));
             document.getElementById(`view-${v}`).classList.remove('hidden');
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('bg-red-800', 'ring-1', 'ring-white/20'));
-            const activeBtn = Array.from(document.querySelectorAll('.nav-btn')).find(b => b.innerText.toLowerCase().includes(v === 'attendance' ? 'asistencia' : (v === 'admin' ? 'configurar' : 'historial')));
-            if(activeBtn) activeBtn.classList.add('bg-red-800', 'ring-1', 'ring-white/20');
             renderAll();
+        };
+
+        window.showAdminTab = (tabId) => {
+            document.querySelectorAll('.admin-tab').forEach(t => t.classList.add('hidden'));
+            document.getElementById(`admin-tab-${tabId}`).classList.remove('hidden');
+            document.querySelectorAll('.admin-tab-btn').forEach(b => {
+                b.classList.remove('text-guinda', 'border-guinda');
+                b.classList.add('text-gray-400', 'border-transparent');
+                if(b.innerText.toLowerCase().includes(tabId.slice(0,3))) {
+                    b.classList.add('text-guinda', 'border-guinda');
+                    b.classList.remove('text-gray-400', 'border-transparent');
+                }
+            });
         };
 
         function initApp() {
-            renderAll();
             const hoy = new Date();
             const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             document.getElementById('display-date').innerText = hoy.toLocaleDateString('es-ES', opciones);
-            validateScheduleToday();
+            renderAll();
         }
 
-        // --- RESPALDOS (BACKUP) ---
-        window.exportBackup = () => {
-            const data = {
-                classrooms: classrooms,
-                history: historyRecords,
-                exportDate: new Date().toISOString()
-            };
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `backup_educontrol_${new Date().toLocaleDateString().replace(/\//g, '-')}.json`;
-            a.click();
-            showToast("Respaldo descargado");
+        // --- CATÁLOGOS ---
+        window.addToCatalog = (type, inputId) => {
+            const input = document.getElementById(inputId);
+            const val = input.value.trim();
+            if(!val) return;
+            if(!db.catalogs[type].includes(val)) {
+                db.catalogs[type].push(val);
+                db.catalogs[type].sort();
+                saveData(); renderAll(); input.value = "";
+                showToast(`Agregado exitosamente`);
+            }
         };
 
-        window.importBackup = (event) => {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    if (data.classrooms && Array.isArray(data.classrooms)) {
-                        if (confirm("¿Deseas restaurar este respaldo? Se sobrescribirán los datos actuales.")) {
-                            classrooms = data.classrooms;
-                            historyRecords = data.history || [];
-                            saveData();
-                            renderAll();
-                            showToast("¡Datos restaurados!");
-                        }
-                    } else {
-                        showToast("Archivo inválido");
-                    }
-                } catch (err) {
-                    showToast("Error al leer archivo");
-                }
-            };
-            reader.readAsText(file);
-            event.target.value = ''; // Reset input
+        window.removeFromCatalog = (type, val) => {
+            db.catalogs[type] = db.catalogs[type].filter(x => x !== val);
+            saveData(); renderAll();
         };
 
-        // --- GESTIÓN DE GRUPOS ---
+        // --- GRUPOS ---
         window.saveClassroom = () => {
-            const grade = document.getElementById('adm-grade').value.trim();
+            const grade = document.getElementById('adm-grade').value;
             const group = document.getElementById('adm-group').value.trim();
-            const teacher = document.getElementById('adm-teacher').value.trim();
-            const subject = document.getElementById('adm-subject').value.trim();
+            const teacher = document.getElementById('adm-teacher').value;
+            const subject = document.getElementById('adm-subject').value;
 
             if(!grade || !group || !teacher || !subject) return showToast("Faltan datos");
 
-            if (editingGroupId) {
-                const c = classrooms.find(x => x.id === editingGroupId);
-                c.fullName = `${grade} ${group.toUpperCase()}`;
-                c.teacher = teacher;
-                c.subject = subject;
-                showToast("Grupo actualizado");
-            } else {
-                const newId = Date.now().toString();
-                classrooms.push({
-                    id: newId,
-                    fullName: `${grade} ${group.toUpperCase()}`,
-                    teacher,
-                    subject,
-                    students: [],
-                    schedule: []
-                });
-                selectClassroom(newId);
-                showToast("¡Grupo Creado!");
-            }
-            saveData();
-            resetGroupForm();
-            renderAll();
-        };
-
-        window.editGroup = (id) => {
-            const c = classrooms.find(x => x.id === id);
-            editingGroupId = id;
-            document.getElementById('admin-group-title').innerText = "Editar Grupo";
-            document.getElementById('btn-save-group').innerText = "Guardar Cambios";
-            document.getElementById('btn-cancel-edit').classList.remove('hidden');
-            
-            const parts = c.fullName.split(' ');
-            document.getElementById('adm-grade').value = parts[0] || "";
-            document.getElementById('adm-group').value = parts[1] || "";
-            document.getElementById('adm-teacher').value = c.teacher;
-            document.getElementById('adm-subject').value = c.subject;
+            const newId = Date.now().toString();
+            db.classrooms.push({
+                id: newId,
+                fullName: `${grade} ${group.toUpperCase()}`,
+                grade, group: group.toUpperCase(),
+                teacher, subject,
+                students: []
+            });
+            saveData(); renderAll(); selectClassroom(newId);
+            showToast("Grupo creado");
         };
 
         window.deleteGroup = (id) => {
-            if(confirm("¿Estás seguro de eliminar este grupo por completo?")) {
-                classrooms = classrooms.filter(x => x.id !== id);
-                if(selectedId === id) {
-                    selectedId = null;
-                    document.getElementById('panel-details').classList.add('hidden');
-                }
-                saveData();
-                renderAll();
+            if(confirm("¿Eliminar este grupo?")) {
+                db.classrooms = db.classrooms.filter(x => x.id !== id);
+                if(selectedId === id) selectedId = null;
+                saveData(); renderAll();
             }
-        };
-
-        window.resetGroupForm = () => {
-            editingGroupId = null;
-            document.getElementById('admin-group-title').innerText = "1. Grupo";
-            document.getElementById('btn-save-group').innerText = "Crear Grupo";
-            document.getElementById('btn-cancel-edit').classList.add('hidden');
-            document.querySelectorAll('#view-admin input[type="text"]').forEach(i => i.value = "");
         };
 
         window.selectClassroom = (id) => {
@@ -399,255 +393,211 @@
             renderAll();
         };
 
-        // --- GESTIÓN DE ALUMNOS ---
+        // --- ALUMNOS ---
         window.addStudent = () => {
-            const nameInput = document.getElementById('st-name');
-            const name = nameInput.value.trim();
+            const input = document.getElementById('st-name');
+            const name = input.value.trim().toUpperCase();
             if(!name || !selectedId) return;
-            const c = classrooms.find(x => x.id === selectedId);
-            c.students.push({ id: Date.now().toString(), name: name.toUpperCase() });
+            const c = db.classrooms.find(x => x.id === selectedId);
+            c.students.push({ id: Date.now().toString(), name });
             c.students.sort((a,b) => a.name.localeCompare(b.name));
-            nameInput.value = "";
-            saveData();
-            renderAll();
-        };
-
-        window.editStudent = (sid) => {
-            const c = classrooms.find(x => x.id === selectedId);
-            const s = c.students.find(x => x.id === sid);
-            const newName = prompt("Nuevo nombre del alumno:", s.name);
-            if(newName) {
-                s.name = newName.toUpperCase();
-                c.students.sort((a,b) => a.name.localeCompare(b.name));
-                saveData();
-                renderAll();
-            }
+            input.value = ""; saveData(); renderAll();
         };
 
         window.deleteStudent = (sid) => {
-            if(confirm("¿Eliminar alumno?")) {
-                const c = classrooms.find(x => x.id === selectedId);
-                c.students = c.students.filter(x => x.id !== sid);
-                saveData();
-                renderAll();
-            }
+            const c = db.classrooms.find(x => x.id === selectedId);
+            c.students = c.students.filter(s => s.id !== sid);
+            saveData(); renderAll();
         };
 
-        // --- IMPORTACIÓN MASIVA ---
-        window.openImportModal = () => {
-            if(!selectedId) return showToast("Selecciona un grupo primero");
-            document.getElementById('modal-import').classList.remove('hidden');
+        // --- USUARIOS ---
+        window.addUser = () => {
+            const user = document.getElementById('user-name').value.trim();
+            const pass = document.getElementById('user-pass').value.trim();
+            const role = document.getElementById('user-role').value;
+            if(!user || !pass) return showToast("Datos incompletos");
+            db.users.push({ id: Date.now().toString(), user, pass, role });
+            saveData(); renderAll();
+            document.getElementById('user-name').value = "";
+            document.getElementById('user-pass').value = "";
+            showToast("Usuario registrado");
         };
 
-        window.closeImportModal = () => {
-            document.getElementById('modal-import').classList.add('hidden');
-            document.getElementById('import-area').value = "";
-        };
-
-        window.processImport = () => {
-            const text = document.getElementById('import-area').value;
-            const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-            if(lines.length === 0) return showToast("No se detectaron nombres");
-
-            const c = classrooms.find(x => x.id === selectedId);
-            lines.forEach(name => {
-                c.students.push({ id: Math.random().toString(36).substr(2, 9), name: name.toUpperCase() });
-            });
-            c.students.sort((a,b) => a.name.localeCompare(b.name));
-            saveData();
-            renderAll();
-            closeImportModal();
-            showToast(`¡${lines.length} alumnos añadidos!`);
-        };
-
-        // --- HORARIOS ---
-        window.addSchedule = () => {
-            if(!selectedId) return;
-            const day = document.getElementById('sch-day').value;
-            const start = document.getElementById('sch-start').value;
-            const end = document.getElementById('sch-end').value;
-            if(!start || !end) return showToast("Define el horario");
-            const c = classrooms.find(x => x.id === selectedId);
-            c.schedule.push({ id: Date.now(), day, start, end });
-            saveData();
-            renderAll();
-            validateScheduleToday();
-        };
-
-        window.removeSchedule = (sid) => {
-            const c = classrooms.find(x => x.id === selectedId);
-            c.schedule = c.schedule.filter(s => s.id !== sid);
-            saveData();
-            renderAll();
-            validateScheduleToday();
-        };
-
-        window.validateScheduleToday = () => {
-            const gid = document.getElementById('select-attendance-group').value;
-            const c = classrooms.find(x => x.id === gid);
-            const warning = document.getElementById('schedule-warning');
-            
-            if(!c || c.schedule.length === 0) {
-                warning.classList.add('hidden');
-                return;
-            }
-
-            const dias = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
-            const hoy = dias[new Date().getDay()];
-            const tieneClaseHoy = c.schedule.some(s => s.day === hoy);
-
-            if(!tieneClaseHoy) warning.classList.remove('hidden');
-            else warning.classList.add('hidden');
+        window.deleteUser = (id) => {
+            if(id === '1') return showToast("No se puede borrar el administrador maestro");
+            db.users = db.users.filter(u => u.id !== id);
+            saveData(); renderAll();
         };
 
         // --- ASISTENCIA ---
-        window.resetTempAttendance = () => { tempAttendance = {}; };
-
         window.markStatus = (studentId, status) => {
             tempAttendance[studentId] = status;
             renderAttendanceList();
-            updateStats();
         };
-
-        function updateStats() {
-            const gid = document.getElementById('select-attendance-group').value;
-            const c = classrooms.find(x => x.id === gid);
-            if(!c) return;
-            document.getElementById('stat-total').innerText = c.students.length;
-            document.getElementById('stat-present').innerText = Object.values(tempAttendance).filter(v => v === 'P').length;
-            document.getElementById('stat-absent').innerText = Object.values(tempAttendance).filter(v => v === 'F').length;
-        }
 
         window.saveAttendance = () => {
             const gid = document.getElementById('select-attendance-group').value;
-            const c = classrooms.find(x => x.id === gid);
-            if(!c || c.students.length === 0) return showToast("Sin alumnos");
-            if(Object.keys(tempAttendance).length < c.students.length) return showToast("Lista incompleta");
+            const c = db.classrooms.find(x => x.id === gid);
+            if(!c || c.students.length === 0) return showToast("Grupo sin alumnos");
+            
+            if(Object.keys(tempAttendance).length < c.students.length) return showToast("Debes marcar a todos los alumnos");
 
-            historyRecords.unshift({
+            db.history.unshift({
                 id: Date.now(),
                 date: new Date().toLocaleDateString('es-ES'),
-                time: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+                time: new Date().toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'}),
                 group: c.fullName,
                 subject: c.subject,
                 present: Object.values(tempAttendance).filter(v => v === 'P').length,
                 total: c.students.length
             });
-            resetTempAttendance();
-            saveData();
+            tempAttendance = {}; saveData();
             showView('history');
-            showToast("Lista guardada");
+            showToast("Asistencia enviada");
         };
 
-        // --- RENDERIZADO ---
+        // --- RENDERS ---
         function renderAll() {
-            const classroomList = document.getElementById('classroom-list');
-            classroomList.innerHTML = classrooms.map(c => `
-                <div class="p-4 rounded-2xl border-2 transition font-bold flex justify-between items-center ${selectedId === c.id ? 'border-red-800 bg-red-50 text-red-900 shadow-sm' : 'bg-white border-gray-50 hover:border-red-100 text-gray-700'}">
+            renderCatalog('grades', 'list-grades');
+            renderCatalog('teachers', 'list-teachers');
+            renderCatalog('subjects', 'list-subjects');
+
+            fillSelect('adm-grade', db.catalogs.grades, 'Grado');
+            fillSelect('adm-teacher', db.catalogs.teachers, 'Maestro');
+            fillSelect('adm-subject', db.catalogs.subjects, 'Materia');
+
+            document.getElementById('classroom-list').innerHTML = db.classrooms.map(c => `
+                <div class="p-3 rounded-xl border-2 flex justify-between items-center transition ${selectedId === c.id ? 'border-guinda bg-red-50' : 'bg-white border-gray-100'}">
                     <div onclick="selectClassroom('${c.id}')" class="flex-1 cursor-pointer">
-                        <span class="text-sm">${c.fullName}</span>
-                        <span class="text-[9px] block opacity-60 uppercase tracking-wider">${c.subject}</span>
+                        <p class="text-sm font-black">${c.fullName}</p>
+                        <p class="text-[9px] text-guinda font-bold uppercase">${c.subject}</p>
                     </div>
-                    <div class="flex gap-2">
-                        <button onclick="editGroup('${c.id}')" class="text-blue-500 hover:bg-blue-50 w-8 h-8 rounded-full transition"><i class="fas fa-edit"></i></button>
-                        <button onclick="deleteGroup('${c.id}')" class="text-red-400 hover:bg-red-50 w-8 h-8 rounded-full transition"><i class="fas fa-trash"></i></button>
-                    </div>
+                    <button onclick="deleteGroup('${c.id}')" class="text-gray-300 hover:text-red-600 px-2"><i class="fas fa-trash-alt text-xs"></i></button>
                 </div>
             `).join('');
 
             if(selectedId) {
-                const c = classrooms.find(x => x.id === selectedId);
-                document.getElementById('current-group-label').innerText = c.fullName;
-                
-                document.getElementById('student-list').innerHTML = c.students.length === 0 
-                    ? `<li class="py-10 text-center text-gray-400 italic text-xs">Sin alumnos</li>`
-                    : c.students.map((s, i) => `
-                        <li class="py-3 px-4 bg-white rounded-xl border border-gray-100 flex justify-between items-center group">
-                            <span class="text-xs font-bold text-gray-700 uppercase">${i+1}. ${s.name}</span>
-                            <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition">
-                                <button onclick="editStudent('${s.id}')" class="text-gray-400 hover:text-blue-500 p-1 px-2"><i class="fas fa-pen text-[10px]"></i></button>
-                                <button onclick="deleteStudent('${s.id}')" class="text-gray-400 hover:text-red-500 p-1 px-2"><i class="fas fa-trash text-[10px]"></i></button>
-                            </div>
-                        </li>`).join('');
-
-                document.getElementById('schedule-display').innerHTML = c.schedule.map(s => `
-                    <div class="bg-gray-800 text-white px-3 py-1.5 rounded-xl text-[9px] font-black flex items-center gap-2">
-                        <span>${s.day}: ${s.start}-${s.end}</span>
-                        <button onclick="removeSchedule(${s.id})" class="text-red-400 hover:text-red-200"><i class="fas fa-times"></i></button>
-                    </div>
+                const c = db.classrooms.find(x => x.id === selectedId);
+                document.getElementById('student-list').innerHTML = c.students.map((s, i) => `
+                    <li class="bg-gray-50 p-2 px-3 rounded-lg flex justify-between items-center text-xs font-bold border border-gray-100">
+                        <span>${i+1}. ${s.name}</span>
+                        <button onclick="deleteStudent('${s.id}')" class="text-gray-300 hover:text-red-500"><i class="fas fa-times"></i></button>
+                    </li>
                 `).join('');
             }
 
-            const sel = document.getElementById('select-attendance-group');
-            sel.innerHTML = classrooms.map(c => `<option value="${c.id}" ${c.id === selectedId ? 'selected' : ''}>${c.fullName} - ${c.subject}</option>`).join('') || '<option value="">Sin grupos</option>';
+            const attSel = document.getElementById('select-attendance-group');
+            attSel.innerHTML = db.classrooms.map(c => `<option value="${c.id}">${c.fullName} - ${c.subject}</option>`).join('') || '<option value="">Crea un grupo primero</option>';
             renderAttendanceList();
 
-            document.getElementById('history-list').innerHTML = historyRecords.map(h => `
-                <div class="bg-white p-5 rounded-3xl shadow-sm border-l-8 border-red-900 flex justify-between items-center">
+            document.getElementById('list-users').innerHTML = db.users.map(u => `
+                <div class="p-4 bg-gray-50 rounded-2xl border flex justify-between items-center">
                     <div>
-                        <b class="text-gray-800">${h.group}</b>
-                        <p class="text-[9px] font-black text-red-900 uppercase">${h.subject}</p>
-                        <p class="text-[9px] text-gray-400 font-bold uppercase mt-1 italic">${h.date} | ${h.time}</p>
+                        <p class="font-black text-sm">${u.user}</p>
+                        <p class="text-[10px] uppercase font-bold text-guinda">${u.role}</p>
                     </div>
-                    <div class="bg-red-50 px-4 py-2 rounded-2xl text-center min-w-[70px]">
-                        <span class="block text-xl font-black text-red-900">${h.present}/${h.total}</span>
-                        <span class="text-[7px] font-bold text-red-800 uppercase">Presentes</span>
+                    ${u.id !== '1' ? `<button onclick="deleteUser('${u.id}')" class="text-gray-300 hover:text-red-600"><i class="fas fa-user-minus"></i></button>` : ''}
+                </div>
+            `).join('');
+
+            document.getElementById('history-list').innerHTML = db.history.map(h => `
+                <div class="bg-white p-4 rounded-2xl border-l-4 border-guinda shadow-sm flex justify-between items-center">
+                    <div>
+                        <b class="text-sm">${h.group} - ${h.subject}</b>
+                        <p class="text-[10px] text-gray-400 font-bold mt-1 uppercase">${h.date} | ${h.time}</p>
+                    </div>
+                    <div class="bg-red-50 px-3 py-1 rounded-lg text-center border border-red-100">
+                        <span class="block text-lg font-black text-guinda">${h.present}/${h.total}</span>
                     </div>
                 </div>
             `).join('');
         }
 
+        function renderCatalog(type, listId) {
+            document.getElementById(listId).innerHTML = db.catalogs[type].map(val => `
+                <div class="flex justify-between items-center p-2 bg-gray-50 rounded-lg text-xs font-bold mb-1">
+                    <span class="truncate pr-2">${val}</span>
+                    <button onclick="removeFromCatalog('${type}', '${val}')" class="text-gray-300 hover:text-red-500"><i class="fas fa-times"></i></button>
+                </div>
+            `).join('') || '<p class="text-[10px] text-gray-300 italic">Lista vacía</p>';
+        }
+
+        function fillSelect(id, list, label) {
+            const s = document.getElementById(id);
+            s.innerHTML = `<option value="">Seleccionar ${label}</option>` + list.map(v => `<option value="${v}">${v}</option>`).join('');
+        }
+
         window.renderAttendanceList = () => {
             const gid = document.getElementById('select-attendance-group').value;
-            const c = classrooms.find(x => x.id === gid);
+            const c = db.classrooms.find(x => x.id === gid);
             const grid = document.getElementById('attendance-grid');
             const msg = document.getElementById('no-students-msg');
-            const stats = document.getElementById('attendance-stats');
             
-            if(!c || c.students.length === 0) {
-                grid.innerHTML = "";
-                msg.classList.remove('hidden');
-                stats.classList.add('hidden');
-                return;
-            }
-
+            if(!c || c.students.length === 0) { grid.innerHTML = ""; msg.classList.remove('hidden'); return; }
             msg.classList.add('hidden');
-            stats.classList.remove('hidden');
-            updateStats();
 
             grid.innerHTML = c.students.map(s => {
                 const status = tempAttendance[s.id];
                 return `
-                    <div class="bg-white p-4 rounded-2xl flex justify-between items-center border border-gray-100 shadow-sm transition-all ${status ? 'ring-2 ring-red-50 bg-red-50/20' : ''}">
-                        <div class="flex flex-col max-w-[60%]">
-                             <span class="font-bold text-gray-700 uppercase text-xs truncate">${s.name}</span>
-                             <span class="text-[8px] font-black uppercase ${status === 'P' ? 'text-green-600' : (status === 'F' ? 'text-red-600' : 'text-gray-300')}">
-                                ${status === 'P' ? 'Presente' : (status === 'F' ? 'Falta' : 'Pendiente')}
-                             </span>
+                    <div class="bg-white p-4 rounded-3xl border flex justify-between items-center shadow-sm ${status ? 'ring-2 ring-red-50 border-guinda' : ''}">
+                        <div class="max-w-[60%]">
+                            <p class="font-bold text-gray-700 uppercase text-[11px] truncate">${s.name}</p>
+                            <p class="text-[9px] font-black uppercase ${status === 'P' ? 'text-green-600' : (status === 'F' ? 'text-red-600' : 'text-gray-300')}">
+                                ${status === 'P' ? 'Presente' : (status === 'F' ? 'Falta' : 'Sin marcar')}
+                            </p>
                         </div>
                         <div class="flex gap-2">
-                            <button onclick="markStatus('${s.id}', 'P')" class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl font-black transition-all ${status === 'P' ? 'bg-green-600 text-white shadow-md' : 'bg-gray-100 text-gray-400'}">P</button>
-                            <button onclick="markStatus('${s.id}', 'F')" class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl font-black transition-all ${status === 'F' ? 'bg-red-600 text-white shadow-md' : 'bg-gray-100 text-gray-400'}">F</button>
+                            <button onclick="markStatus('${s.id}', 'P')" class="w-10 h-10 rounded-xl font-black ${status === 'P' ? 'bg-green-600 text-white shadow-md' : 'bg-gray-100 text-gray-400'}">P</button>
+                            <button onclick="markStatus('${s.id}', 'F')" class="w-10 h-10 rounded-xl font-black ${status === 'F' ? 'bg-red-600 text-white shadow-md' : 'bg-gray-100 text-gray-400'}">F</button>
                         </div>
                     </div>
                 `;
             }).join('');
         };
 
-        function saveData() {
-            localStorage.setItem('edu_classrooms', JSON.stringify(classrooms));
-            localStorage.setItem('edu_history', JSON.stringify(historyRecords));
-        }
+        // --- EXTRAS ---
+        window.openImportModal = () => document.getElementById('modal-import').classList.remove('hidden');
+        window.closeImportModal = () => document.getElementById('modal-import').classList.add('hidden');
+        window.processImport = () => {
+            const text = document.getElementById('import-area').value;
+            const names = text.split('\n').map(n => n.trim().toUpperCase()).filter(n => n);
+            if(!names.length || !selectedId) return;
+            const c = db.classrooms.find(x => x.id === selectedId);
+            names.forEach(n => c.students.push({ id: Math.random().toString(36).substr(2,9), name: n }));
+            c.students.sort((a,b) => a.name.localeCompare(b.name));
+            saveData(); renderAll(); closeImportModal();
+            showToast(`${names.length} alumnos agregados`);
+        };
 
-        window.clearHistory = () => {
-            if(confirm("¿Borrar historial?")) { historyRecords = []; saveData(); renderAll(); }
-        }
+        window.exportBackup = () => {
+            const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = `backup_cbtis291_${new Date().toISOString().slice(0,10)}.json`;
+            a.click();
+        };
 
+        window.importBackup = (e) => {
+            const file = e.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                try {
+                    const data = JSON.parse(ev.target.result);
+                    if(data.classrooms) { db = data; saveData(); renderAll(); showToast("Sistema Restaurado"); }
+                } catch(err) { showToast("Error al cargar archivo"); }
+            };
+            reader.readAsText(file);
+        };
+
+        function saveData() { localStorage.setItem('edu_db_cbtis', JSON.stringify(db)); }
+        window.clearHistory = () => { if(confirm("¿Borrar todo el historial de pases de lista?")) { db.history = []; saveData(); renderAll(); }};
         function showToast(m) {
-            const t = document.getElementById('toast');
-            t.innerText = m; t.classList.replace('opacity-0', 'opacity-100');
+            const t = document.getElementById('toast'); t.innerText = m;
+            t.classList.replace('opacity-0', 'opacity-100');
             setTimeout(() => t.classList.replace('opacity-100', 'opacity-0'), 3000);
         }
+        function resetTempAttendance() { tempAttendance = {}; }
     </script>
 </body>
 </html>
